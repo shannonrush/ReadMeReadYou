@@ -11,11 +11,6 @@ gem 'devise'
 
 gem 'capistrano'
 
-gem 'jquery-rails'
-gem 'uglifier'
-gem 'libv8', "3.3.10.4"
-gem 'therubyracer'
-
 
 group :development do
  gem 'thin'
