@@ -13,6 +13,7 @@ gem 'capistrano'
 
 gem 'jquery-rails'
 gem 'uglifier'
+gem 'execjs'
 
 group :development do
  gem 'thin'
