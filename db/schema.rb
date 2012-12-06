@@ -11,6 +11,48 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 0) do
+ActiveRecord::Schema.define(:version => 20121206180301) do
+
+  create_table "chapters", :force => true do |t|
+    t.integer  "submission_id"
+    t.string   "name"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+  end
+
+  create_table "comments", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "critique_id"
+    t.text     "content"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
+  create_table "critiques", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "submission_id"
+    t.text     "content"
+    t.integer  "rating"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+  end
+
+  create_table "submissions", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "title"
+    t.text     "content"
+    t.text     "notes"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "users", :force => true do |t|
+    t.string   "first"
+    t.string   "last"
+    t.string   "email"
+    t.text     "bio"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
 end
