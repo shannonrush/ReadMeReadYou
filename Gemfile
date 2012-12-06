@@ -14,6 +14,7 @@ gem 'capistrano'
 gem 'jquery-rails'
 gem 'uglifier'
 gem 'execjs'
+gem 'therubyracer'
 
 group :development do
  gem 'thin'
