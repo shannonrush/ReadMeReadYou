@@ -13,8 +13,9 @@ gem 'capistrano'
 
 gem 'jquery-rails'
 gem 'uglifier'
-gem 'libv8', '~> 3.11.8'
+gem 'libv8', "3.3.10.4 x86-linux"
 gem 'therubyracer'
+
 
 group :development do
  gem 'thin'
