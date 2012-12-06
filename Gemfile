@@ -12,6 +12,7 @@ gem 'devise'
 gem 'capistrano'
 
 gem 'jquery-rails'
+gem 'uglifier'
 
 group :development do
  gem 'thin'
