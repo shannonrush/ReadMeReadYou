@@ -1,0 +1,28 @@
+= form_for(@user) do |f|
+  = render 'shared/errors', :object => @user
+  %div.form
+    =f.label :avatar
+    %p
+      Your Photo:
+    = image_tag @user.avatar.url(:medium) 
+    =f.file_field :avatar
+  %div
+    =f.label :first, "First Name"
+    %br
+    =f.text_field :first
+  %div
+    =f.label :last, "Last Name"
+    %br
+    =f.text_field :last
+  %div
+    =f.label :email
+    %br
+    =f.email_field :email
+  %div
+    =f.label :bio
+    %br
+    =f.text_area :bio
+  %div
+    =f.submit
+
+
