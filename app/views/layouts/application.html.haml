@@ -3,11 +3,12 @@
   %head
     %title ReadMeReadYou        
     = stylesheet_link_tag :application, :media => "all"
+    = javascript_include_tag :application 
     = csrf_meta_tags
   %body
     %div#flash
       %p.notice=notice
       %p.alert=alert
-    /%div#header_links=render 'welcome/header_links'
+    %div#header_links=render 'welcome/header_links'
     /%div#banner=link_to image_tag("main_banner.png"), root_path
     %div#yield= yield
