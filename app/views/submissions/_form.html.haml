@@ -14,8 +14,12 @@
       =text_field_tag :chapters, @submission.chapter_list
     %p
       =f.label :content, "Submission"
-    %p 
-      =file_field_tag :file
+    -if @submission.new_record?
+      %p 
+        =file_field_tag :file
+    -else
+      %p
+        =f.text_area :content
     %p
       =f.label :notes, "Author Notes"
     %p

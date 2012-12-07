@@ -9,6 +9,7 @@ class Submission < ActiveRecord::Base
   end
 
   def create_chapters(chapter_list)
+    self.chapters.destroy_all
     unless chapter_list.blank?
       names = chapter_list.split(',')
       names.each {|n| Chapter.create(name:n, submission_id:self.id)}
