@@ -8,6 +8,9 @@ class SubmissionsController < ApplicationController
 
   def create
     @submission = Submission.create(params[:submission])
+    file_string = params[:file].read
+    content = file_string.gsub(/\r\n/,"\n\n")
+    @submission.update_attribute(:content,content)
     if @submission.valid?
       @submission.create_chapters(params[:chapters])
       redirect_to submission_path(@submission)

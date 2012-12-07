@@ -1,24 +1,25 @@
-= render 'shared/errors', :object => @submission
-%div
-  =f.hidden_field :user_id, :value => current_user.id 
-  %p
-    =f.label :title
-  %p
-    =f.text_field :title
-  %p
-    Chapter(s) (optional)
-  %p
-    (Separate with commas if more than one - examples: 1,2,3 or Summer, Fall, Winter)
-  %p
-    =text_field_tag :chapters, @submission.chapter_list
-  %p
-    =f.label :content, "Submission"
-  %p 
-    =f.text_area :content
-  %p
-    =f.label :notes, "Author Notes"
-  %p
-    =f.text_area :notes
-  %p
-    =f.submit
+=form_for @submission, :html => {:multipart => true} do |f|
+  = render 'shared/errors', object:@submission
+  %div
+    =f.hidden_field :user_id, :value => current_user.id 
+    %p
+      =f.label :title
+    %p
+      =f.text_field :title
+    %p
+      Chapter(s) (optional)
+    %p
+      (Separate with commas if more than one - examples: 1,2,3 or Summer, Fall, Winter)
+    %p
+      =text_field_tag :chapters, @submission.chapter_list
+    %p
+      =f.label :content, "Submission"
+    %p 
+      =file_field_tag :file
+    %p
+      =f.label :notes, "Author Notes"
+    %p
+      =f.text_area :notes
+    %p
+      =f.submit
 
