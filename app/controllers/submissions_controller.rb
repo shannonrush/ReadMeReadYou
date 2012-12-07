@@ -21,6 +21,7 @@ class SubmissionsController < ApplicationController
 
   def show
     @submission = Submission.find(params[:id])
+    @critique = Critique.new
   end
 
   def edit

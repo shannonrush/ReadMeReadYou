@@ -1,14 +1,25 @@
 -if viewer_is_user?(@submission.user)
   =link_to "Edit Submission",edit_submission_path(@submission)
+-else
+  %div
+    =form_for @critique, :html => {:multipart => true} do |f|
+      =render "shared/errors",object:@critique
+      =f.hidden_field :submission_id, :value => @submission.id
+      =f.hidden_field :user_id, :value => current_user.id
+      %p
+        =file_field_tag :file
+      =f.submit
 %div
   %p
     Title: #{@submission.title}
-  %p
-    Chapters: #{@submission.chapter_list}
-  %p
-    Author Notes:
-  %p
-    =@submission.notes
+  -if has_chapters?(@submission)  
+    %p
+      Chapters: #{@submission.chapter_list}
+  -if has_notes?(@submission)
+    %p
+      Author Notes:
+    %p
+      =@submission.notes
   %p
     Submission:
   %p

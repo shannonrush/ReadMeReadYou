@@ -11,5 +11,25 @@ require 'spec_helper'
 #   end
 # end
 describe SubmissionsHelper do
-  pending "add some examples to (or delete) #{__FILE__}"
+  let (:submission) {FactoryGirl.create(:submission)}
+  describe '#has_notes?' do
+    it 'returns true if submission has notes' do
+      helper.has_notes?(submission).should be_true
+    end
+    it 'returns false is submission does not have notes' do
+      submission.update_attribute(:notes,"")
+      helper.has_notes?(submission).should be_false
+    end
+  end
+  describe '#has_chapters?' do
+    it 'returns true if submission has chapters' do
+      chapter = FactoryGirl.create(:chapter)
+      submission.chapters << chapter
+      submission.reload
+      helper.has_chapters?(submission).should be_true
+    end
+    it 'returns false if submission has no chapters' do
+      helper.has_chapters?(submission).should be_false
+    end
+  end
 end
