@@ -16,6 +16,14 @@ class SubmissionsController < ApplicationController
     end
   end
 
+  def show
+    @submission = Submission.find(params[:id])
+  end
+
+  def edit
+    @submission = Submission.find(params[:id])
+  end
+
   protected
 
   def check_authorization

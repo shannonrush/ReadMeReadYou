@@ -4,6 +4,9 @@ class Submission < ActiveRecord::Base
 
   attr_accessible :content, :notes, :title, :user_id
 
+  def chapter_list
+    self.chapters.collect {|c| c.name}.join(", ")
+  end
 
   def create_chapters(chapter_list)
     unless chapter_list.blank?
