@@ -1,7 +1,7 @@
 = form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :put }) do |f| 
+  =render 'shared/errors',object:resource
   %h2
     Change Your Password
-  = devise_error_messages! 
   = f.hidden_field :reset_password_token 
   %div
     %p= f.label :password, "New password"
