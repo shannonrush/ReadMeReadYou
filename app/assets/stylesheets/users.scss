@@ -1,5 +1,10 @@
 @import "main";
 
+input[type=file].avatar {
+  position:relative;
+  bottom:10px;
+}
+
 img.avatar {
   border: 5px solid black;
 }

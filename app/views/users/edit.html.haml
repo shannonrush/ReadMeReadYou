@@ -4,7 +4,7 @@
     %p#avatar
       Your Photo:
     = image_tag @user.avatar.url(:medium), class:"avatar" 
-    =f.file_field :avatar
+    =f.file_field :avatar, class:"avatar"
   %div
     %p=f.label :first, "First Name"
     %p=f.text_field :first

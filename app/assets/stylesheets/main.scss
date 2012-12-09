@@ -1,4 +1,5 @@
-$font_family:"American Typewriter",sans-serif;
+$font_family:"American Typewriter",serif;
+$easy_reading:"Arial",sans-serif;
 $dark_grey: #666666;
 $light_grey: #CCCCCC;
 $blue: #9fd1f8;
@@ -36,9 +37,9 @@ form {
   p {
     margin-bottom:2px;
     margin-top:0px !important;
-    label {
-      font-size:1.2em;  
-    }
+  }
+  p.label, label {
+    font-size:1.2em;
   }
   input[type=email], input[type=password], input[type=text] {
     background-color:$light_grey !important;
@@ -59,8 +60,6 @@ form {
     font-family:$font-family;
     font-weight:lighter;
     font-size:0.9em;
-    position:relative;
-    bottom:10px;
   }
   input[type=checkbox] {
     -ms-transform: scale(2); /* IE */

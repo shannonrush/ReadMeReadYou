@@ -1,0 +1,7 @@
+=form_for @critique, :html => {:multipart => true} do |f|
+  =render "shared/errors",object:@critique
+  =f.hidden_field :submission_id, :value => @submission.id
+  =f.hidden_field :user_id, :value => current_user.id
+  Please submit your critique text file:
+  %p=file_field_tag :file,class:"critique"
+  =image_submit_tag("submit_button.png", class:"critique")

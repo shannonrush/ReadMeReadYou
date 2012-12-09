@@ -1,0 +1,38 @@
+@import "main";
+div#submission_header {
+  padding-left:30px;
+  font-size:1.1em;
+  p {
+    margin-bottom:1em;
+    span.label {
+      font-size:1.2em;
+      color:$light_grey;
+    }
+  }
+}
+div#action {
+  width:50%;
+  margin:0px auto;
+  position:relative;
+  left:75px;
+  top:10px;
+}
+div#content {
+  width:80%;
+  font-family:$easy_reading;
+  color: black;
+  padding:25px;
+  background-color:white;
+  border-radius:30px;
+  p {
+    margin-bottom:1em;
+  }
+}
+input[type=file].critique {
+  margin-top:15px;
+  margin-bottom:15px;
+  margin-left:50px;
+}
+input[type=image].critique {
+  margin-left:80px;
+}
