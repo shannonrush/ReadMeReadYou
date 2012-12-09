@@ -6,9 +6,9 @@
     = javascript_include_tag :application 
     = csrf_meta_tags
   %body
+    %div#logo
     %div#flash
-      %p.notice=notice
-      %p.alert=alert
-    %div#header_links=render 'welcome/header_links'
-    /%div#banner=link_to image_tag("main_banner.png"), root_path
-    %div#yield= yield
+      %p.notice
+      %p.alert
+    %div#header
+    /%div#yield= yield
