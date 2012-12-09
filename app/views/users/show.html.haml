@@ -1,13 +1,12 @@
-%div
-  %div
-    =image_tag @user.avatar.url(:medium)
-  %div
-    %p
-      #{@user.first} #{@user.last}
-  %div
+%div.avatar
+  =image_tag @user.avatar.url(:medium), class:"avatar"
+%div.profile
+  %p.name
+    #{@user.first} #{@user.last}
+  %p.bio
     #{@user.bio}
+%div.clear
 -if viewer_is_user?(@user)
-  %div
-    =link_to "Edit Profile",edit_user_path(@user)
-  %div
-    =link_to "Make A Submission",new_submission_path
+  %p=link_to "Edit Profile",edit_user_path(@user)
+  %br
+  %p=link_to "Make A Submission",new_submission_path

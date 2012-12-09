@@ -1,0 +1,14 @@
+= form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :put }) do |f| 
+  %h2
+    Change Your Password
+  = devise_error_messages! 
+  = f.hidden_field :reset_password_token 
+  %div
+    %p= f.label :password, "New password"
+    %p= f.password_field :password 
+  %div
+    %p= f.label :password_confirmation, "Confirm new password"
+    %p= f.password_field :password_confirmation
+  %div
+    %p=image_submit_tag("change_password_button.png")
+= render "devise/shared/links" 

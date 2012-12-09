@@ -1,0 +1,11 @@
+= form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :post }) do |f| 
+  %h2
+    Forgot your password?
+  =devise_error_messages! 
+  %div
+    %p= f.label :email
+    %p= f.email_field :email
+  %div
+    %p
+      =image_submit_tag("send_instructions_button.png")
+= render "devise/shared/links" 

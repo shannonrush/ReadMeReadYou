@@ -1,28 +1,23 @@
 = form_for(@user) do |f|
   = render 'shared/errors', :object => @user
-  %div.form
-    =f.label :avatar
-    %p
+  %div
+    %p#avatar
       Your Photo:
-    = image_tag @user.avatar.url(:medium) 
+    = image_tag @user.avatar.url(:medium), class:"avatar" 
     =f.file_field :avatar
   %div
-    =f.label :first, "First Name"
-    %br
-    =f.text_field :first
+    %p=f.label :first, "First Name"
+    %p=f.text_field :first
   %div
-    =f.label :last, "Last Name"
-    %br
-    =f.text_field :last
+    %p=f.label :last, "Last Name"
+    %p=f.text_field :last
   %div
-    =f.label :email
-    %br
-    =f.email_field :email
+    %p=f.label :email
+    %p=f.email_field :email
   %div
-    =f.label :bio
-    %br
-    =f.text_area :bio
+    %p=f.label :bio
+    %p=f.text_area :bio
   %div
-    =f.submit
+    %p=image_submit_tag("update_profile_button.png")
 
 

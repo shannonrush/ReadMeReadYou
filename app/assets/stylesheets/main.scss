@@ -1,23 +1,87 @@
 $font_family:"American Typewriter",sans-serif;
-
+$dark_grey: #666666;
+$light_grey: #CCCCCC;
+$blue: #9fd1f8;
 * {
-  margin:0;
-  padding:0;
-  font-weight:lighter;
 }
 body {
-  background-color:#666666;
+  margin:0;
+  padding:0;
+  font-family:$font-family;
+  font-weight:lighter;
+  background-color:$dark_grey;;
   background-image:url("bg1.png");
   background-repeat:repeat-y;
+  color: white;
+}
+a {
+  color:$blue; 
+  text-decoration:none;
+}
+a:hover {
+  text-decoration:underline;
+}
+p {
+  margin:0;
+}
+form {
+  div {
+    padding-top:10px;
+  }
+  h2 {
+    font-size:2.0em;
+    font-weight:lighter;
+    margin-bottom:15px;
+  }
+  p {
+    margin-bottom:2px;
+    margin-top:0px !important;
+    label {
+      font-size:1.2em;  
+    }
+  }
+  input[type=email], input[type=password], input[type=text] {
+    background-color:$light_grey !important;
+    height:25px;
+    padding:3px;
+    font-size:1.1em;
+    font-family:$font-family;
+  }
+  textarea {
+    width:80%;
+    background-color:$light_grey;
+    font-family:$font-family;
+    font-size:1.1em;
+    padding:5px;
+    height:200px;
+  }
+  input[type=file] {
+    font-family:$font-family;
+    font-weight:lighter;
+    font-size:0.9em;
+    position:relative;
+    bottom:10px;
+  }
+  input[type=checkbox] {
+    -ms-transform: scale(2); /* IE */
+    -moz-transform: scale(2); /* FF */
+    -webkit-transform: scale(2); /* Safari and Chrome */
+    -o-transform: scale(2); /* Opera */
+    padding: 10px;
+    margin-right:5px;
+    position:relative;
+    bottom:3px;
+  }
+}
+.clear {
+  clear:both
 }
 #logo {
   position:absolute;
   width:150px;
   height:115px;
-  background-image:url("logo.png");
 }
 #flash {
-  font-family:$font-family;
   position:absolute;
   left:170px;
   top: 55px;
@@ -26,4 +90,15 @@ body {
 #header {
   height: 75px;
   border-bottom: 5px solid white;
+}
+#header_links {
+  float:right;
+  padding:10px;
+}
+#yield {
+  position:relative;
+  top: 25px;
+  left: 200px;
+  padding-bottom: 20px;
+  width:80%
 }
