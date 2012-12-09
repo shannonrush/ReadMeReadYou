@@ -6,11 +6,12 @@
     %p=f.text_field :title
   %div
     %p.label
-      Chapter(s) (optional)
-    %p
-      (Separate with commas if more than one - examples: 1,2,3 or Summer, Fall, Winter)
-    %p
-      =text_field_tag :chapters, @submission.chapter_list
+      Chapter(s) - optional
+    %p=text_field_tag :chapters, @submission.chapter_list
+  %div
+    %p.label
+      Genre
+    %p=f.select(:genre,Submission::GENRES,{:include_blank=>true})
   %div
     %p=f.label :content, "Submission"
     -if @submission.new_record?

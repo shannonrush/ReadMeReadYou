@@ -6,4 +6,5 @@ module SubmissionsHelper
   def has_notes?(submission)
     submission.notes.present?
   end
+
 end

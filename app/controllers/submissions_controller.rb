@@ -9,9 +9,13 @@ class SubmissionsController < ApplicationController
 
   def create
     @submission = Submission.create(params[:submission])
-    file_string = params[:file].read
-    content = file_string.gsub(/\r\n/,"\n\n")
-    @submission.update_attribute(:content,content)
+    if params[:file].nil?
+      return render :action => "new"
+    else
+      file_string = params[:file].read
+      content = file_string.gsub(/\r\n/,"\n\n")
+      @submission.update_attribute(:content,content)
+    end
     if @submission.valid?
       @submission.create_chapters(params[:chapters])
       redirect_to submission_path(@submission)
@@ -46,5 +50,4 @@ class SubmissionsController < ApplicationController
       redirect_to user_path(current_user), :notice => "It seems like you ended up in the wrong place...Please try again!"
     end
   end
-
 end

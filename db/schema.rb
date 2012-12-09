@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121206224124) do
+ActiveRecord::Schema.define(:version => 20121209213831) do
 
   create_table "chapters", :force => true do |t|
     t.integer  "submission_id"
@@ -44,6 +44,7 @@ ActiveRecord::Schema.define(:version => 20121206224124) do
     t.text     "notes"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.string   "genre"
   end
 
   create_table "users", :force => true do |t|
