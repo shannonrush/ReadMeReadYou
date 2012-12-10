@@ -7,6 +7,8 @@ class Critique < ActiveRecord::Base
 
   validates_presence_of :content, :message => "file must be chosen"
 
+  validates_presence_of :rating, :only => :update
+
   after_create :send_notification
 
   protected

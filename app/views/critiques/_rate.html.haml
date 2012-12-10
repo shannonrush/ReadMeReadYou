@@ -1,0 +1,15 @@
+-if viewer_is_user?(@critique.submission.user)
+  =form_for @critique do |f|
+    %p
+      %span.label
+        Rate This Critique #{link_to_function "[?]","$('div#rating_guide').toggle()"}:
+      =f.select(:rating,-1..10,{:include_blank=>true})
+      =image_submit_tag("rate_button.png",class:"rating")
+-else
+  -unless @critique.rating.nil?
+    %p
+      %span.label
+        Rating:
+      =@critique.rating
+
+  

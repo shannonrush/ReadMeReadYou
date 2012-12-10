@@ -26,5 +26,28 @@ div#new_comment {
     margin-top:10px;
   }
 }
-
-
+form {
+  input[type=image].rating {
+     position:relative;
+     top:6px;
+  }
+}
+div#rating_guide {
+  width:79%;
+  margin-top:20px;
+  margin-bottom:20px;
+  font-family:$font-family;
+  font-weight:normal;
+  color: black;
+  padding: 25px;
+  background-color:white;
+  border-radius:30px;
+  border:5px solid $blue;
+  display:none;
+    h2 {
+      font-size:1.1em;
+    }
+    p {
+      margin-bottom:1em;
+    }
+}

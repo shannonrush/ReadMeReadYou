@@ -5,6 +5,9 @@
   %p
     %span.label
       Critiquer: #{link_to @critique.user.full_name, @critique.user}
+  =render "rate"
+%div#rating_guide
+  =render "guide"
 %div#content=simple_format(@critique.content)
 =render @critique.comments
 =render "comments/new"
