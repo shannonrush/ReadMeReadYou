@@ -99,3 +99,25 @@ form {
   padding-bottom: 20px;
   width:80%
 }
+div#content_header {
+  padding-left:30px;
+  font-size:1.1em;
+  p {
+    margin-bottom:1em;
+    span.label {
+      font-size:1.2em;
+      color:$light_grey;
+    }
+  }
+}
+div#content {
+  width:80%;
+  font-family:$easy_reading;
+  color: black;
+  padding:25px;
+  background-color:white;
+  border-radius:30px;
+  p {
+    margin-bottom:1em;
+  }
+}

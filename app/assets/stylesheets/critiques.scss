@@ -1,0 +1,30 @@
+@import "common";
+
+div.comment {
+  width:80%;
+  margin-top:20px;
+  font-family:$font-family;
+  font-weight:normal;
+  color: black;
+  padding: 25px;
+  background-color:white;
+  border-radius:30px;
+  border: 5px solid black;
+  p.quote {
+    margin-bottom:10px; 
+  }
+  a {
+    color:$dark_blue;
+  }
+}
+div#new_comment {
+  background-color:$light_grey;
+  textarea {
+    background-color:white;
+    width:90%;
+    padding:15px;
+    margin-top:10px;
+  }
+}
+
+

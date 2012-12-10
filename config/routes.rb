@@ -3,5 +3,6 @@ ReadMeReadYou::Application.routes.draw do
   resources :users
   resources :submissions
   resources :critiques
+  resources :comments
   root :to => 'welcome#index'
 end

@@ -1,0 +1,7 @@
+%div.comment
+  %p.quote="\"#{comment.content}\""
+  %p.commenter
+    ="-- " 
+    =link_to comment.user.full_name,comment.user 
+    on 
+    =comment_date(comment)

@@ -1,6 +1,21 @@
 @import "common";
 
-div#submission_header {
+div#action {
+  width:50%;
+  margin:0px auto;
+  position:relative;
+  left:75px;
+  top:10px;
+}
+input[type=file].critique {
+  margin-top:15px;
+  margin-bottom:15px;
+  margin-left:50px;
+}
+input[type=image].critique {
+  margin-left:80px;
+}
+div#header {
   padding-left:30px;
   font-size:1.1em;
   p {
@@ -10,13 +25,6 @@ div#submission_header {
       color:$light_grey;
     }
   }
-}
-div#action {
-  width:50%;
-  margin:0px auto;
-  position:relative;
-  left:75px;
-  top:10px;
 }
 div#content {
   width:80%;
@@ -28,12 +36,4 @@ div#content {
   p {
     margin-bottom:1em;
   }
-}
-input[type=file].critique {
-  margin-top:15px;
-  margin-bottom:15px;
-  margin-left:50px;
-}
-input[type=image].critique {
-  margin-left:80px;
 }

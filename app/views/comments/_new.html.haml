@@ -1,0 +1,10 @@
+%div#new_comment.comment
+  =form_for @comment do |f|
+    =f.hidden_field :user_id, :value => current_user.id
+    =f.hidden_field :critique_id, :value => @critique.id
+    %div
+      %p=f.label :content, "New Comment"
+      %p=f.text_area :content
+    %div
+      %p=image_submit_tag("submit_button.png")
+
