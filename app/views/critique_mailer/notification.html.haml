@@ -1,0 +1,10 @@
+%p
+  Hi #{@author.first}!
+%p
+  Good news!  Your submission #{link_to @critique.submission.title, submission_url(@critique.submission)} has a new #{link_to "critique", critique_url(@critique)} from #{link_to @critique.user.full_name, user_url(@critique.user)}!
+%p
+  Read, rate, and comment on your critique #{link_to "here", critique_url(@critique)} - and don't forget to thank your reader!
+%p
+  Happy Writing!
+%p
+  RMRY

@@ -8,8 +8,8 @@
   %body
     %div#logo=link_to image_tag("logo.png"), root_path
     %div#flash
-      %p.notice
-      %p.alert
+      %p.notice=notice
+      %p.alert=alert
     %div#header
       %div#header_links
         =render "welcome/header_links"

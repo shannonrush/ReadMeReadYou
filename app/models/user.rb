@@ -16,6 +16,10 @@ class User < ActiveRecord::Base
 
   after_create :send_welcome
 
+  def full_name
+    self.first+" "+self.last
+  end
+
   protected
 
   def send_welcome
