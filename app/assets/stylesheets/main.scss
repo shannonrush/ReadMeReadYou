@@ -1,8 +1,5 @@
-$font_family:"American Typewriter",serif;
-$easy_reading:"Arial",sans-serif;
-$dark_grey: #666666;
-$light_grey: #CCCCCC;
-$blue: #9fd1f8;
+@import "common";
+
 * {
 }
 body {
@@ -84,7 +81,7 @@ form {
   font-size:1.5em;
   position:absolute;
   left:170px;
-  top: 45px;
+  top:45px;
   color:#CCCCCC;
 }
 #header {

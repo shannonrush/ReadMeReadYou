@@ -5,6 +5,8 @@ class Critique < ActiveRecord::Base
 
   attr_accessible :content, :rating, :submission_id, :user_id
 
+  validates_presence_of :content, :message => "file must be chosen"
+
   after_create :send_notification
 
   protected

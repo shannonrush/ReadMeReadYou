@@ -9,9 +9,7 @@ class SubmissionsController < ApplicationController
 
   def create
     @submission = Submission.create(params[:submission])
-    if params[:file].nil?
-      return render :action => "new"
-    else
+    unless params[:file].nil?
       file_string = params[:file].read
       content = file_string.gsub(/\r\n/,"\n\n")
       @submission.update_attribute(:content,content)
