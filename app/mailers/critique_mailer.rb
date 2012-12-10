@@ -9,4 +9,12 @@ class CritiqueMailer < ActionMailer::Base
       subject:"#{critique.submission.title} has a new critique!"
     )
   end
+
+  def report_abuse(critique)
+    @critique = critique
+    mail(
+      to:"support@readmereadyou.com",
+      subject:"Abusive critique reported"
+    )
+  end
 end
