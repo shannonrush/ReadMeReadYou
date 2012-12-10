@@ -17,6 +17,11 @@
       %span.label
         Author Notes:
       =@submission.notes
+  -if has_critiques?(@submission)
+    %p
+      %span.label
+        Critiques:
+      =link_to @submission.critiques.count, submission_critiques_path(@submission)
 %div#content=simple_format(@submission.content)
 %div#action
   -if viewer_is_user?(@submission.user)
