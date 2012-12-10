@@ -11,7 +11,12 @@ class UsersController < ApplicationController
   end
 
   def show
-    @user = User.find(params[:id])
+    @user = User.find(params[:id]) rescue nil
+    @submissions = params[:submissions]=="all" ? @user.submissions : @user.submissions.limit(5)
+    @critiques = params[:critiques]=="all" ? @user.critiques : @user.critiques.limit(5)
+    unless @user
+      redirect_to current_user,notice:"Please try again"
+    end
   end
 
   protected

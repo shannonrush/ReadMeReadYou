@@ -34,8 +34,11 @@ class CritiquesController < ApplicationController
   end
 
   def show
-    @critique = Critique.find(params[:id])
+    @critique = Critique.find(params[:id]) rescue nil
     @comment = Comment.new
+    unless @critique
+      redirect_to current_user, notice:"Please try again"
+    end
   end
 
   def update

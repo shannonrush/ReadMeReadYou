@@ -28,8 +28,11 @@ class SubmissionsController < ApplicationController
   end
 
   def show
-    @submission = Submission.find(params[:id])
+    @submission = Submission.find(params[:id]) rescue nil
     @critique = Critique.new
+    unless @submission
+      redirect_to current_user, notice:"Please try again"
+    end
   end
 
   def update

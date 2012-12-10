@@ -11,6 +11,8 @@ class Critique < ActiveRecord::Base
   after_create :send_notification
   after_update :report_if_abusive_rating
 
+  default_scope order('created_at DESC')
+
   def self.ordered_by(critiques, order_by)
     if order_by == "submission_title"
       return critiques.sort {|a,b| a.submission.title <=> b.submission.title}

@@ -11,6 +11,8 @@ class Submission < ActiveRecord::Base
   validates_presence_of :title
   validates_presence_of :content, :message => "file must be chosen"
 
+  default_scope order('created_at DESC')
+
   # submission is active if it is less than a week old or it has less than 5 critiques
 
   scope :active, joins("LEFT OUTER JOIN critiques ON critiques.submission_id = submissions.id").group("submissions.id").having("count(critiques.id)<5 OR submissions.created_at > ?", Time.zone.now-1.week)
