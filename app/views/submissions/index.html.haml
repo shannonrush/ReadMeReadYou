@@ -1,0 +1,8 @@
+%div.submission#list_header
+  %p
+    %span=link_to "Title", submissions_path(sort:"title")
+    %span=link_to "Author", submissions_path(sort:"author")
+    %span=link_to "Genre", submissions_path(sort:"genre DESC")
+    %span=link_to "Word Count", submissions_path(sort:"word_count")
+    %span=link_to "Critiques", submissions_path(sort:"critique_count")
+=render @submissions

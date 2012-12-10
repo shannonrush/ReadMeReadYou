@@ -13,7 +13,7 @@ class CritiquesController < ApplicationController
     if @critique.valid?
       redirect_to @critique.user, :notice => "Your critique has been sent!"
     else
-      @critique = Submission.find(params[:critique][:critique_id])
+      @critique = Submission.find(params[:critique][:submission_id])
       redirect_to @critique, :notice => "There was a problem with your critique file, please try again"
     end
   end
@@ -24,8 +24,12 @@ class CritiquesController < ApplicationController
   end
 
   def update
-    @critique.update_attributes(params[:critique])
-    notice = @critique.valid? ? "Thank you for rating your critique!" : "Please select rating"
+    if params[:critique][:rating].present?
+      @critique.update_attributes(params[:critique])
+      notice = "Thank you for rating your critique!"
+    else
+      notice = "Please select rating"
+    end
     redirect_to @critique, notice:notice
   end
 

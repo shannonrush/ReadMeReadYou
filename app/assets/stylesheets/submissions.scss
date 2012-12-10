@@ -15,25 +15,14 @@ input[type=file].critique {
 input[type=image].critique {
   margin-left:80px;
 }
-div#header {
-  padding-left:30px;
-  font-size:1.1em;
-  p {
-    margin-bottom:1em;
-    span.label {
-      font-size:1.2em;
-      color:$light_grey;
-    }
-  }
-}
-div#content {
+div.submission {
   width:80%;
-  font-family:$easy_reading;
-  color: black;
-  padding:25px;
-  background-color:white;
-  border-radius:30px;
   p {
-    margin-bottom:1em;
+    width:100%;
+    overflow:hidden;
+    span {
+      width:20%;
+      float:left;
+    }
   }
 }

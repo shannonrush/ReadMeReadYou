@@ -3,6 +3,11 @@ class SubmissionsController < ApplicationController
   before_filter :check_logged_in
   before_filter :check_authorization, :only => [:edit, :update]
 
+  def index
+    order_by = params[:sort].nil? ? "created_at" : params[:sort]
+    @submissions = Submission.ordered_by(order_by)
+  end
+
   def new
     @submission = Submission.new
   end
