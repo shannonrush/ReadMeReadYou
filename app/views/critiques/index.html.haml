@@ -1,0 +1,9 @@
+%div.critique#list_header
+  %p
+    %span=link_to "Date",critiques_path(sort:"created_at",user_id:@user_id ,submission_id:@submission_id )
+    %span=link_to "Critique",critiques_path(sort:"submission_title",user_id:@user_id ,submission_id:@submission_id )
+    %span=link_to "Critiquer",critiques_path(sort:"critiquer",user_id:@user_id ,submission_id:@submission_id )
+ 
+    %span=link_to "Rating",critiques_path(sort:"rating",user_id:@user_id ,submission_id:@submission_id )
+ 
+=render @critiques

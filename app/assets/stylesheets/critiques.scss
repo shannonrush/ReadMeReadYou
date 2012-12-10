@@ -51,3 +51,15 @@ div#rating_guide {
       margin-bottom:1em;
     }
 }
+div.critique {
+  width:80%;
+  p {
+    width:100%;
+    overflow:hidden;
+    span {
+      width:25%;
+      float:left;
+    }
+  }
+}
+

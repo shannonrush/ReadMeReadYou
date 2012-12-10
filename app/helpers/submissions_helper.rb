@@ -7,4 +7,8 @@ module SubmissionsHelper
     submission.notes.present?
   end
 
+  def date_for_list(submission)
+    submission.created_at.strftime("%D")
+  end
+
 end

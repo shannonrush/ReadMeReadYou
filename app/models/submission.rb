@@ -27,6 +27,14 @@ class Submission < ActiveRecord::Base
     end
   end
 
+  def title_with_chapters
+    title = self.title.truncate(40)
+    unless self.chapter_list.blank?
+      title << " (#{self.chapter_list.truncate(30)})"
+    end
+    return title
+  end
+
   def chapter_list
     self.chapters.collect {|c| c.name}.join(", ")
   end

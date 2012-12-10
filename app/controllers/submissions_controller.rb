@@ -4,7 +4,7 @@ class SubmissionsController < ApplicationController
   before_filter :check_authorization, :only => [:edit, :update]
 
   def index
-    order_by = params[:sort].nil? ? "created_at" : params[:sort]
+    order_by = params[:sort].present? ? params[:sort] : "created_at"
     @submissions = Submission.ordered_by(order_by)
   end
 

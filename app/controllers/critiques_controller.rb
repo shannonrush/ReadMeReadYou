@@ -3,6 +3,21 @@ class CritiquesController < ApplicationController
   before_filter :check_logged_in
   before_filter :check_authorization, :only => :update
 
+  def index
+    order_by = params[:sort].present? ? params[:sort] : "created_at"
+    @user_id = params[:user_id]||""
+    @submission_id = params[:submission_id]||""
+    if params[:user_id].present?
+      user_critiques = User.find(params[:user_id]).critiques
+      @critiques = Critique.ordered_by(user_critiques,order_by)
+    elsif params[:submission_id].present?
+      sub_critiques = Submission.find(params[:submission_id]).critiques
+      @critiques = Critique.ordered_by(sub_critiques,order_by)
+    else
+      redirect_to current_user,notice:"Please try again"
+    end
+  end
+
   def create
     @critique = Critique.create(params[:critique])
     unless params[:file].nil?
