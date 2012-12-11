@@ -6,5 +6,6 @@ ReadMeReadYou::Application.routes.draw do
   end
   resources :critiques
   resources :comments
+  resources :alerts, :only => :update
   root :to => 'welcome#index'
 end

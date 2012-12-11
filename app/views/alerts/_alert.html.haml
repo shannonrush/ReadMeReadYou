@@ -1,2 +1,6 @@
-%p=link_to alert.message, "http://#{request.env['HTTP_HOST']}#{alert.link}"
+=form_for alert do |f|
+  =f.hidden_field :cleared, value:true
+  %p
+    =link_to '[X]', "#", :onclick => "$('#edit_#{dom_id(alert)}').submit()"
+    =link_to alert.message, "http://#{request.env['HTTP_HOST']}#{alert.link}"
 
