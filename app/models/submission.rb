@@ -32,7 +32,7 @@ class Submission < ActiveRecord::Base
   def title_with_chapters
     title = self.title.truncate(40)
     unless self.chapter_list.blank?
-      title << " (#{self.chapter_list.truncate(30)})"
+      title << " Ch. #{self.chapter_list.truncate(30)}"
     end
     return title
   end
