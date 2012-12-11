@@ -14,6 +14,7 @@ class UsersController < ApplicationController
     @user = User.find(params[:id]) rescue nil
     @submissions = params[:submissions]=="all" ? @user.submissions : @user.submissions.limit(5)
     @critiques = params[:critiques]=="all" ? @user.critiques : @user.critiques.limit(5)
+    @alerts = params[:alerts]=="all" ? Alert.uncleared_for_user(@user) : Alert.uncleared_for_user(@user).limit(5)
     unless @user
       redirect_to current_user,notice:"Please try again"
     end

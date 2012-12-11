@@ -11,7 +11,16 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121209213831) do
+ActiveRecord::Schema.define(:version => 20121211005557) do
+
+  create_table "alerts", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "message"
+    t.boolean  "cleared"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.string   "link"
+  end
 
   create_table "chapters", :force => true do |t|
     t.integer  "submission_id"

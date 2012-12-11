@@ -9,6 +9,7 @@ class User < ActiveRecord::Base
 
   has_many :submissions
   has_many :critiques
+  has_many :alerts
 
   validates_presence_of [:first, :last], :on => :update, :message => "name can't be blank"
 

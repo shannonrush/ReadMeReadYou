@@ -9,25 +9,6 @@
 -if viewer_is_user?(@user)
   %p=link_to "Edit Profile",edit_user_path(@user)
 %div#user_elements
-  %div.submissions
-    %h2
-      Submissions
-    =render "submission_list_header"
-    =render :partial => "submission", collection:@submissions
-    -if @user.submissions.count > 5
-      %br
-      %p=link_to "All Submissions", user_path(@user, submissions:"all")
-    -if viewer_is_user?(@user)
-      %br
-      %p=link_to "Make A Submission",new_submission_path
-  %div.critiques
-    %h2
-      Critiques
-    =render "critique_list_header"
-    =render :partial => "critique", collection:@critiques
-    -if @user.critiques.count > 5
-      %br
-      %p=link_to "All Critiques", user_path(@user, critiques:"all")
-    -if viewer_is_user?(@user)
-      %br
-      %p=link_to "Find A Submission To Critique",submissions_path
+  =render "alerts"
+  =render "submissions"
+  =render "critiques"

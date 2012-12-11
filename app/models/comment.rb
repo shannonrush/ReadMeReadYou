@@ -5,4 +5,19 @@ class Comment < ActiveRecord::Base
   validates_presence_of :content
 
   attr_accessible :content, :critique_id, :user_id
+
+  after_create :generate_alerts
+
+  protected
+
+  def generate_alerts
+    # alert critiquer
+    title = self.critique.submission.title_with_chapters
+    link = "/critique/#{self.critique.id}"
+    id = self.critique.user.id
+    Alert.generate(id, "Your critique on #{title} has a new comment",link)
+    # alert other commenters
+    users = self.critique.comments.collect {|c| c.user}.uniq.reject{|u|u==self.critique.user}
+    users.each {|u| Alert.generate(u.id, "The critique on #{title} has a new comment",link)}
+  end
 end
