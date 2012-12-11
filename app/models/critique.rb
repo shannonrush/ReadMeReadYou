@@ -18,7 +18,7 @@ class Critique < ActiveRecord::Base
     elsif order_by == "critiquer"
       return critiques.sort {|a,b| a.user.last <=> b.user.last}
     elsif order_by == "rating"
-      return critiques.sort_by {|c| c.rating}
+      return critiques.sort_by {|c| c.rating.to_i}
     else order_by == "created_at"
       return critiques.sort_by{|c|c.created_at}
     end

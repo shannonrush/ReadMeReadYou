@@ -1,8 +1,6 @@
 ReadMeReadYou::Application.routes.draw do
   devise_for :users, :controllers => { :registrations => "registrations" }  
-  resources :users do
-    resources :critiques, :only => :index
-  end
+  resources :users 
   resources :submissions do
     resources :critiques, :only => :index
   end

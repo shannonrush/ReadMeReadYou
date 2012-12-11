@@ -5,12 +5,8 @@ class CritiquesController < ApplicationController
 
   def index
     order_by = params[:sort].present? ? params[:sort] : "created_at"
-    @user_id = params[:user_id]||""
-    @submission_id = params[:submission_id]||""
-    if params[:user_id].present?
-      user_critiques = User.find(params[:user_id]).critiques
-      @critiques = Critique.ordered_by(user_critiques,order_by)
-    elsif params[:submission_id].present?
+    @submission_id = params[:submission_id]
+    if params[:submission_id].present?
       sub_critiques = Submission.find(params[:submission_id]).critiques
       @critiques = Critique.ordered_by(sub_critiques,order_by)
     else
