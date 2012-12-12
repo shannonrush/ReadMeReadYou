@@ -16,7 +16,7 @@
     %p
       %span.label
         Author Notes:
-      =@submission.notes
+      =simple_format(@submission.notes)
   -if has_critiques?(@submission)
     %p
       %span.label
