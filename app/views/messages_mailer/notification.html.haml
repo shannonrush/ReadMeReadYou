@@ -1,0 +1,7 @@
+%p
+  New RMRY message from #{link_to @message.from.full_name,user_url(@message.from)}:
+%p
+  Subject: #{@message.subject}
+%p=simple_format(@message.message)
+%p
+  Visit #{link_to "your RMRY page",user_url(@message.to)} to reply to your message
