@@ -8,5 +8,9 @@
       =render @messages
     -if Message.undeleted.to_user(@user).count > 5
       =link_to "All Messages", user_path(@user,messages:"all")
-    %p=link_to_function "New Message","$('div#new_message').toggle()"
+    %p
+      %span#new_message_link=link_to "New Message"
+      =" / "
+      %span#sent_messages_link=link_to "Sent Messages"
     =render "messages/new_message"
+    =render "messages/sent_messages"

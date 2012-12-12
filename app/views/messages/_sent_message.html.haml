@@ -1,0 +1,8 @@
+%div.message_container
+  %div.message
+    %p
+      %span.sent_date=date_for_inbox(sent_message)
+      %span.to=link_to sent_message.to.full_name, sent_message.to
+      %span.subject=link_to sent_message.subject
+  %div.read_message
+    %p.message=simple_format(sent_message.message)

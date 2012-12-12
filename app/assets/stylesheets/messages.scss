@@ -84,4 +84,12 @@ div.read_message {
     text-align:right;
   }
 }
-
+div#sent_messages {
+  display:none;
+  span.sent_date {
+    width:20%;
+  }
+  span.to {
+    width:20%;
+  }
+}

@@ -1,0 +1,10 @@
+%div#sent_messages
+  %h2
+    Sent Messages
+  -if @sent_messages.empty?
+    No Sent Messages
+  -else
+    =render :partial=>"messages/sent_message",:collection=>@sent_messages,:as=>:sent_message
+  -if Message.undeleted.from_user(@user).count > 5
+    =link_to "All Sent Messages", user_path(@user,sent_messages:"all")
+
