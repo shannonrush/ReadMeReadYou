@@ -2,7 +2,10 @@
   %h2
     Critiques
   =render "critique_list_header"
-  =render :partial => "critique", collection:@critiques
+  -if @critiques.empty?
+    No Critiques
+  -else
+    =render :partial => "critique", collection:@critiques
   -if @user.critiques.count > 5
     %p=link_to "All Critiques", user_path(@user, critiques:"all")
   -if viewer_is_user?(@user)

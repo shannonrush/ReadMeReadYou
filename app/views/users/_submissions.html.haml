@@ -2,7 +2,10 @@
   %h2
     Submissions
   =render "submission_list_header"
-  =render :partial => "submission", collection:@submissions
+  -if @submissions.empty?
+    No Submissions
+  -else
+    =render :partial => "submission", collection:@submissions
   -if @user.submissions.count > 5
     %p=link_to "All Submissions", user_path(@user, submissions:"all")
   -if viewer_is_user?(@user)
