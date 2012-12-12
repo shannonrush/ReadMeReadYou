@@ -33,3 +33,55 @@ div#new_message {
     width:25%;
   }
 }
+div.message {
+  width:80%;
+  p {
+    margin:0;
+    width:100%;
+    overflow:hidden;
+    span {
+      float:left;
+    }
+    span.id, span.hidden_message {
+      display:none;
+    }
+    span.delete {
+      width:3%;
+    }
+    span.date {
+      width:17%;
+    }
+    span.from {
+      width:20%;
+    }
+    span.subject {
+      width:60%;
+    }
+    span.bolder_link {
+      a {
+        font-weight:400;
+      }
+    }
+  }
+}
+div.read_message {
+  display:none;
+  width:80%;
+  margin-top:20px;
+  margin-bottom:20px;
+  font-family:$font-family;
+  color: black;
+  padding: 25px;
+  background-color:white;
+  border-radius:30px;
+  font-weight:normal;
+  a {
+    color: $dark_blue;
+  }
+  p.reply {
+    margin-top:10px;
+    padding-right:10px;
+    text-align:right;
+  }
+}
+

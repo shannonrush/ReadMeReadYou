@@ -4,8 +4,6 @@
   =render "critique_list_header"
   =render :partial => "critique", collection:@critiques
   -if @user.critiques.count > 5
-    %br
     %p=link_to "All Critiques", user_path(@user, critiques:"all")
   -if viewer_is_user?(@user)
-    %br
     %p=link_to "Find A Submission To Critique",submissions_path

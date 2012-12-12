@@ -7,7 +7,7 @@
     =f.hidden_field :to_id,id:"to_id"
     %div
       %p=f.label :to
-      %p=autocomplete_field_tag :user_name,'',autocomplete_user_first_messages_path, :id_element => '#to_id', :class => "to"
+      %p=autocomplete_field_tag :user_name,'',autocomplete_user_first_messages_path, :id_element => '#to_id', :class => "to",:value => @message.to.try(:full_name)
     %div
       %p=f.label :subject
       %p=f.text_field :subject

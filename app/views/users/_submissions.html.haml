@@ -4,8 +4,6 @@
   =render "submission_list_header"
   =render :partial => "submission", collection:@submissions
   -if @user.submissions.count > 5
-    %br
     %p=link_to "All Submissions", user_path(@user, submissions:"all")
   -if viewer_is_user?(@user)
-    %br
     %p=link_to "Make A Submission",new_submission_path

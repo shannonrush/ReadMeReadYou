@@ -8,7 +8,9 @@
   %body
     %div#logo=link_to image_tag("logo.png"), root_path
     %div#flash
-      %p.notice=notice
+      %p.notice
+        =notice
+        Test notice
       %p.alert=alert
     %div#header
       %div#header_links

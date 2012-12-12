@@ -1,2 +1,13 @@
-%div.message#message_#{message.id}
-  %p=message.message
+%div.message_container
+  %div.message
+    %p
+      %span.hidden_message=message.message
+      %span.id=message.id
+      %span.delete=link_to "[X]"
+      %span.date=date_for_inbox(message)
+      %span.from=link_to message.from.full_name, message.from
+      %span.subject{:class => subject_link_weight(message)}=link_to message.subject
+  %div.read_message
+    %p.message=simple_format(message.message)
+    %p.reply=link_to "Reply"
+
