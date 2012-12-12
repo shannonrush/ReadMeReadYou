@@ -24,9 +24,9 @@ $(document).ready(function() {
 		$('#new_message').show();
 		var container = $(this).parents('.message_container');
 		var id = container.find('.from a').attr("href").split('/')[2];
-		var name = container.find('.from a').html();
-		var subject = container.find('.subject a').html();
-		var message = container.find('.hidden_message').html();
+		var name = container.find('.from a').text();
+		var subject = container.find('.subject a').text();
+		var message = container.find('.hidden_message').text();
 		$('#to_id').val(id);
 		$('#user_name').val(name);
 		$('#message_subject').val(subject);
