@@ -22,18 +22,7 @@ div#user_elements {
   h2 {
     font-weight:lighter;
   }
-  div.submission {
-    width:80%;
-    p {
-      width:100%;
-      overflow:hidden;
-      span {
-        width:20%;
-        float:left;
-      }
-    }
-  } 
-  div.critique {
+  div.submission, div.critique {
     width:80%;
     p {
       width:100%;

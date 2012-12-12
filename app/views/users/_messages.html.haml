@@ -1,0 +1,14 @@
+-if viewer_is_user?(@user) 
+  %div.messages
+    %h2
+      Messages
+    -if @messages.empty?
+      No Messages
+    - else
+      =render @messages
+    -if Message.undeleted.to_user(@user).count > 5
+      =link_to "All Messages", user_path(@user,messages:"all")
+    %br
+    %br
+    %p=link_to_function "New Message","$('div#new_message').toggle()"
+    =render "messages/new_message"

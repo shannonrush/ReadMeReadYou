@@ -1,0 +1,18 @@
+%div#new_message{:class => new_message_visibility(@message)}
+  =form_for @message do |f|
+    =render "messages/errors"
+    %h2
+      New Message
+    =f.hidden_field :from_id,value:@user.id
+    =f.hidden_field :to_id,id:"to_id"
+    %div
+      %p=f.label :to
+      %p=autocomplete_field_tag :user_name,'',autocomplete_user_first_messages_path, :id_element => '#to_id', :class => "to"
+    %div
+      %p=f.label :subject
+      %p=f.text_field :subject
+    %div
+      %p=f.label :message
+      %p=f.text_area :message
+    %div
+      %p=image_submit_tag("on_white_submit_button.png")

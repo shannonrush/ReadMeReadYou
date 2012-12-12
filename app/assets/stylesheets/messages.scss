@@ -1,0 +1,35 @@
+@import "common";
+
+.hidden {
+  display:none;
+}
+.shown {
+  display:block;
+}
+
+div#new_message {
+  width:80%;
+  margin-top:20px;
+  font-family:$font-family;
+  color: black;
+  padding: 25px;
+  background-color:white;
+  border-radius:30px;
+  border: 5px solid $blue;
+  font-weight:normal;
+  h2 {
+    font-weight:normal;
+  }
+  a {
+    color:$dark_blue;
+  }
+  textarea {
+    width:90%;
+  }
+  input[type=text] {
+    width:90%;
+  }
+  input[type=text].to {
+    width:25%;
+  }
+}

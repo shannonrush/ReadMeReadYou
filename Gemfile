@@ -12,6 +12,8 @@ gem 'devise'
 gem 'capistrano'
 
 gem 'jquery-rails'
+gem 'jquery-ui-rails'
+gem 'rails3-jquery-autocomplete', :git => "https://github.com/slash4/rails3-jquery-autocomplete"
 gem 'uglifier'
 gem 'execjs'
 gem 'therubyracer', '0.10.2'

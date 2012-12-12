@@ -1,0 +1,7 @@
+%div.errors
+  -if @message.errors.any?
+    %ul
+      -@message.errors.messages.keys.each do |key|
+        %li
+          =key 
+          =@message.errors.messages[key].flatten.first

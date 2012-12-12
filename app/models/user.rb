@@ -10,7 +10,7 @@ class User < ActiveRecord::Base
   has_many :submissions
   has_many :critiques
   has_many :alerts
-
+  has_many :messages
   validates_presence_of [:first, :last], :on => :update, :message => "name can't be blank"
 
   attr_accessible :avatar, :bio, :email, :first, :last, :password, :password_confirmation, :remember_me

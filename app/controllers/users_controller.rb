@@ -15,6 +15,9 @@ class UsersController < ApplicationController
     @submissions = params[:submissions]=="all" ? @user.submissions : @user.submissions.limit(5)
     @critiques = params[:critiques]=="all" ? @user.critiques : @user.critiques.limit(5)
     @alerts = params[:alerts]=="all" ? Alert.uncleared_for_user(@user) : Alert.uncleared_for_user(@user).limit(5)
+    @messages = params[:messages]=="all" ? Message.undeleted.to_user(@user) : Message.undeleted.to_user(@user).limit(5)
+    @message = Message.new(params[:message])
+    flash[:errors].each { |attr, message| @message.errors.add(attr, message) } if flash[:errors]
     unless @user
       redirect_to current_user,notice:"Please try again"
     end
