@@ -18,7 +18,17 @@ class User < ActiveRecord::Base
   after_create :send_welcome
 
   def full_name
-    self.first+" "+self.last
+    if self.first && self.last
+      self.first+" "+self.last
+    elsif self.first || self.last
+      self.first || self.last
+    else
+      "Unknown"
+    end
+  end
+
+  def needs_profile_update?
+    self.first.nil? || self.last.nil? || self.email.nil?
   end
 
   protected

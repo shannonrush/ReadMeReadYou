@@ -17,8 +17,7 @@ class CritiquesController < ApplicationController
   def create
     @critique = Critique.create(params[:critique])
     unless params[:file].nil?
-      file_string = params[:file].read
-      content = file_string.gsub(/\r\n/,"\n\n")
+      content = ContentFixer.fix(params[:file])
       @critique.update_attribute(:content,content)
     end
     if @critique.valid?
@@ -56,7 +55,7 @@ class CritiquesController < ApplicationController
   def check_authorization
     @critique = Critique.find(params[:id])
     unless @critique.submission.user == current_user 
-      redirect_to current_user, notice:"It seems like you ended up in the wrong place...Please try again!"
+      redirect_to current_user, notice:"Please try again!"
     end
   end
 end

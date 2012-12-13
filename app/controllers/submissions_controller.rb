@@ -15,8 +15,7 @@ class SubmissionsController < ApplicationController
   def create
     @submission = Submission.create(params[:submission])
     unless params[:file].nil?
-      file_string = params[:file].read
-      content = file_string.gsub(/\r\n/,"\n\n")
+      content = ContentFixer.fix(params[:file])
       @submission.update_attribute(:content,content)
     end
     if @submission.valid?
@@ -53,7 +52,7 @@ class SubmissionsController < ApplicationController
   def check_authorization
     @submission = Submission.find(params[:id])
     unless @submission.user == current_user 
-      redirect_to user_path(current_user), :notice => "It seems like you ended up in the wrong place...Please try again!"
+      redirect_to root_path, :notice => "Please try again!"
     end
   end
 end
