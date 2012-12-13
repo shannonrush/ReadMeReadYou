@@ -13,7 +13,7 @@ class Comment < ActiveRecord::Base
   def generate_alerts
     # alert critiquer
     title = self.critique.submission.title_with_chapters
-    link = "/critique/#{self.critique.id}"
+    link = "/critiques/#{self.critique.id}"
     id = self.critique.user.id
     Alert.generate(id, "Your critique on #{title} has a new comment",link)
     # alert other commenters

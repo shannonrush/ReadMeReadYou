@@ -52,7 +52,7 @@ class SubmissionsController < ApplicationController
   def check_authorization
     @submission = Submission.find(params[:id])
     unless @submission.user == current_user 
-      redirect_to root_path, :notice => "Please try again!"
+      redirect_to current_user, :notice => "Please try again!"
     end
   end
 end
