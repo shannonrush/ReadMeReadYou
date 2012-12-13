@@ -68,5 +68,6 @@ module ReadMeReadYou
     end 
                                                              
     config.action_view.field_error_proc = Proc.new { |html_tag, instance| "#{html_tag}".html_safe} 
+    config.autoload_paths << File.join(config.root, "lib")
   end
 end
