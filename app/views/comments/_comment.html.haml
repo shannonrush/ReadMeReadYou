@@ -1,5 +1,5 @@
 %div.comment
-  %p.quote="\"#{comment.content}\""
+  %p.quote=simple_format(comment.content)
   %p.commenter
     ="-- " 
     =link_to comment.user.full_name,comment.user 
