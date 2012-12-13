@@ -1,7 +1,7 @@
 %div.critique#list_header
   %p
-    %span=link_to "Date",submission_critiques_path(@submission_id, sort:"created_at")
-    %span=link_to "Critique",submission_critiques_path(@submission_id, sort:"submission_title")
-    %span=link_to "Critiquer",submission_critiques_path(@submission_id, sort:"critiquer")
-    %span=link_to "Rating",submission_critiques_path(@submission_id, sort:"rating") 
+    %span=link_to "Date",submission_critiques_path(@submission, sort:"created_at")
+    %span=link_to "Critique",submission_critiques_path(@submission, sort:"submission_title")
+    %span=link_to "Critiquer",submission_critiques_path(@submission, sort:"critiquer")
+    %span=link_to "Rating",submission_critiques_path(@submission, sort:"rating") 
 =render @critiques

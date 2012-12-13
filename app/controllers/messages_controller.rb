@@ -2,8 +2,11 @@ class MessagesController < ApplicationController
   
   autocomplete :user, [:first,:last], :extra_data => [:last], :display_value => :full_name
 
-  before_filter :check_authorization, :only => :update
-  
+  before_filter :check_logged_in
+  before_filter :check_for_message, :only => :update
+  before_filter :check_authorization_for_update, :only => :update
+  before_filter :check_authorization_for_create, :only => :create
+
   def create
     @message = Message.create(params[:message])
     if @message.valid?
@@ -24,13 +27,28 @@ class MessagesController < ApplicationController
 
   protected
 
-  def check_authorization
+  def check_logged_in
     authenticate_user!
+  end
+
+  def check_for_message
     @message = Message.find(params[:id]) rescue nil
-    unless @message && current_user == @message.user
-      redirect_to current_user,notice:"Please try again"
+    unless @message      
+      redirect_to current_user,notice:"Message not found, please try again"
     end
   end
 
-end
+  def check_authorization_for_update
+    unless current_user == @message.to
+      redirect_to current_user,notice:"Authorization failed, please try again"
+    end
+  end
 
+  def check_authorization_for_create
+    user = User.find(params[:message][:from_id]) rescue nil
+    unless current_user == user
+      redirect_to current_user,notice:"Authorization failed, please try again"
+    end
+  end
+ 
+end

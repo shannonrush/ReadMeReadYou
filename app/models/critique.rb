@@ -3,7 +3,7 @@ class Critique < ActiveRecord::Base
   belongs_to :user
   belongs_to :submission
 
-  attr_accessible :content, :rating, :submission_id, :user_id
+  attr_accessible :content, :rating, :submission, :submission_id, :user, :user_id
 
   validates_presence_of :content, :message => "file must be chosen"
 

@@ -1,7 +1,9 @@
 class SubmissionsController < ApplicationController
 
   before_filter :check_logged_in
-  before_filter :check_authorization, :only => [:edit, :update]
+  before_filter :check_for_submission, :only => [:show,:update]
+  before_filter :check_authorization_for_update, :only => [:edit, :update]
+  before_filter :check_authorization_for_create, :only => :create
 
   def index
     order_by = params[:sort].present? ? params[:sort] : "created_at"
@@ -27,11 +29,7 @@ class SubmissionsController < ApplicationController
   end
 
   def show
-    @submission = Submission.find(params[:id]) rescue nil
     @critique = Critique.new
-    unless @submission
-      redirect_to current_user, notice:"Please try again"
-    end
   end
 
   def update
@@ -49,10 +47,24 @@ class SubmissionsController < ApplicationController
     authenticate_user!
   end
 
-  def check_authorization
-    @submission = Submission.find(params[:id])
-    unless @submission.user == current_user 
-      redirect_to current_user, :notice => "Please try again!"
+  def check_for_submission
+    @submission = Submission.find(params[:id]) rescue nil
+    unless @submission
+      redirect_to current_user, :notice => "Submission not found, please try again"
     end
   end
+
+  def check_authorization_for_update
+    unless @submission.user == current_user 
+      redirect_to current_user, :notice => "Authorization failed, please try again"
+    end
+  end
+
+  def check_authorization_for_create
+    user = User.find(params[:submission][:user_id]) rescue nil
+    unless user == current_user 
+      redirect_to current_user, :notice => "Authorization failed, please try again"
+    end
+  end
+
 end

@@ -1,5 +1,5 @@
 FactoryGirl.define do
-  factory :user do
+  factory :user, aliases:[:from,:to] do
     email "shannon@readmereadyou.com"
     first "Shannon"
     last "Rush"
