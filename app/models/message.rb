@@ -5,6 +5,7 @@ class Message < ActiveRecord::Base
   belongs_to :to, :class_name => "User", :foreign_key => "to_id"
 
   validates_presence_of :to
+  validates_presence_of :from
   validates_presence_of :subject
   validates_presence_of :message
 

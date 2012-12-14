@@ -3,7 +3,8 @@ class Alert < ActiveRecord::Base
 
   belongs_to :user
 
-  scope :uncleared_for_user, lambda {|user| where("user_id = ? and cleared IS NULL",user.id)} 
+  scope :uncleared, where("cleared IS NOT TRUE")
+  scope :for_user, lambda {|user| where(user_id:user.id)} 
   default_scope order('created_at DESC')
 
   def self.generate(user_id, message, link="")

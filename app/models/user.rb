@@ -11,7 +11,9 @@ class User < ActiveRecord::Base
   has_many :critiques
   has_many :alerts
   has_many :messages
+
   validates_presence_of [:first, :last], :on => :update, :message => "name can't be blank"
+  validates_presence_of :email, :on => :update
 
   attr_accessible :avatar, :bio, :email, :first, :last, :password, :password_confirmation, :remember_me
 
@@ -20,8 +22,6 @@ class User < ActiveRecord::Base
   def full_name
     if self.first && self.last
       self.first+" "+self.last
-    elsif self.first || self.last
-      self.first || self.last
     else
       "Unknown"
     end

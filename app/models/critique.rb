@@ -3,12 +3,12 @@ class Critique < ActiveRecord::Base
   belongs_to :user
   belongs_to :submission
 
-  attr_accessible :content, :rating, :submission, :submission_id, :user, :user_id
+  attr_accessible :created_at, :content, :rating, :submission, :submission_id, :user, :user_id
 
   validates_presence_of :content, :message => "file must be chosen"
 
-  after_create :send_notification, :generate_alerts_for_create
-  after_update :report_if_abusive_rating, :generate_alerts_for_update
+  after_create :send_notification, :alert_for_new_critique
+  after_update :report_if_abusive_rating, :alert_for_rating
 
   default_scope order('created_at DESC')
 
@@ -26,12 +26,12 @@ class Critique < ActiveRecord::Base
 
   protected
 
-  def generate_alerts_for_create
+  def alert_for_new_critique
     # alert submission author of critique
     Alert.generate(self.submission.user.id,"#{self.submission.title_with_chapters} has a new critique!","/critiques/#{self.id}")
   end
 
-  def generate_alerts_for_update
+  def alert_for_rating
     # alert critiquer of rating 
     if self.rating.present?
       Alert.generate(self.user.id,"Your critique for #{self.submission.title_with_chapters} has been rated","/critiques/#{self.id}")

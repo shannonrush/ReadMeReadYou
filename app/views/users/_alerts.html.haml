@@ -1,7 +1,7 @@
--if viewer_is_user?(@user) && Alert.uncleared_for_user(@user).count > 0
+-if viewer_is_user?(@user) && Alert.uncleared.for_user(@user).count > 0
   %div.alerts
     %h2 
       Alerts
     =render @alerts
-    -if Alert.uncleared_for_user(@user).count > 5
+    -if Alert.uncleared.for_user(@user).count > 5
       =link_to "All Alerts", user_path(@user,alerts:"all")
