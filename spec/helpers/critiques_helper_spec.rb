@@ -1,15 +1,11 @@
 require 'spec_helper'
 
-# Specs in this file have access to a helper object that includes
-# the CritiquesHelper. For example:
-#
-# describe CritiquesHelper do
-#   describe "string concat" do
-#     it "concats two strings with spaces" do
-#       helper.concat_strings("this","that").should == "this that"
-#     end
-#   end
-# end
 describe CritiquesHelper do
-  pending "add some examples to (or delete) #{__FILE__}"
+  let (:comment) {FactoryGirl.create(:comment)}
+  describe '#comment_date' do
+    it 'should return comment created at as Day, Month Date, Year at Time am/pm' do
+      comment.created_at = "January 15, 1974 at 12:00pm"
+      helper.comment_date(comment).should eql("Tuesday, January 15, 1974 at 12:00 PM")
+    end
+  end
 end

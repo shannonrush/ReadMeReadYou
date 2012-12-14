@@ -1,17 +1,9 @@
 require 'spec_helper'
 
-# Specs in this file have access to a helper object that includes
-# the SubmissionsHelper. For example:
-#
-# describe SubmissionsHelper do
-#   describe "string concat" do
-#     it "concats two strings with spaces" do
-#       helper.concat_strings("this","that").should == "this that"
-#     end
-#   end
-# end
 describe SubmissionsHelper do
   let (:submission) {FactoryGirl.create(:submission)}
+  let (:crit_user) {FactoryGirl.create(:user, email:"crit@rmry.com")}
+  
   describe '#has_notes?' do
     it 'returns true if submission has notes' do
       helper.has_notes?(submission).should be_true
@@ -30,6 +22,16 @@ describe SubmissionsHelper do
     end
     it 'returns false if submission has no chapters' do
       helper.has_chapters?(submission).should be_false
+    end
+  end
+  describe '#has_critiques?(submission)' do
+    it 'returns  false if submission has no critiques' do
+      helper.has_critiques?(submission).should be_false
+    end
+    it 'returns true if submission has critiques' do
+      critique = Critique.create(submission_id:submission.id,user_id:crit_user.id,content:"critique")
+      submission.reload
+      helper.has_critiques?(submission).should be_true
     end
   end
 end
