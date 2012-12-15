@@ -2,8 +2,11 @@ require 'spec_helper'
 
 describe Comment do
   let (:comment) {FactoryGirl.create(:comment)}
-  let (:critique) {FactoryGirl.create(:critique_no_after_create)}
-
+  let (:critique) {FactoryGirl.create(:critique)}
+  before do
+    Critique.any_instance.stub(:send_notification)
+    Critique.any_instance.stub(:alert_for_new_critique)
+  end
   describe 'validations' do
     it 'should require content to be valid' do
       comment.should be_valid

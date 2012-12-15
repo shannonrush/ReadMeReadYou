@@ -1,11 +1,22 @@
 require "spec_helper"
 
 describe CritiqueMailer do
-  let(:author){FactoryGirl.create(:user_no_after_create, :email => "author@rmry.com")}
+  let(:author){FactoryGirl.create(:user)}
+  before do
+    User.any_instance.stub(:send_welcome)
+  end
+  
   let(:submission){FactoryGirl.create(:submission,:user => user)}
-  let(:critiquer){FactoryGirl.create(:user_no_after_create, :email => "critiquer@rmry.com")}
-  let(:critique){FactoryGirl.create(:critique_no_after_create,:user => critiquer)}
+  let(:critiquer){FactoryGirl.create(:user)}
+  before do
+    User.any_instance.stub(:send_welcome)
+  end
+  let(:critique){FactoryGirl.create(:critique,:user => critiquer)}
 
+  before do
+    Critique.any_instance.stub(:send_notification)
+    Critique.any_instance.stub(:alert_for_new_critique)
+  end
   describe "#notification" do
     it 'should send an email with the correct subject and body content to the critique submission author' do
       ActionMailer::Base.deliveries = []

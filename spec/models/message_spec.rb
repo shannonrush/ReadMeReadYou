@@ -30,8 +30,9 @@ describe Message do
   describe 'after_create :send_notification' do
     it 'should should send one email to message receiver' do
       ActionMailer::Base.deliveries = []
-      to = FactoryGirl.create(:user_no_after_create)
-      from = FactoryGirl.create(:user_no_after_create)
+      User.any_instance.stub(:send_welcome)
+      to = FactoryGirl.create(:user)
+      from = FactoryGirl.create(:user)
       new_message = FactoryGirl.create(:message,to:to,from:from)
       ActionMailer::Base.deliveries.count.should eql(1)
       mail = ActionMailer::Base.deliveries.first
@@ -81,8 +82,10 @@ describe Message do
 
   describe 'default_scope' do
     it 'should return sorted by created_at with latest first' do
-      message1 = FactoryGirl.create(:message,created_at:"Jaanuary 15, 1974")
-      message2 = FactoryGirl.create(:message,created_at:"January 1, 1974")
+      to = FactoryGirl.create(:user)
+      from = FactoryGirl.create(:user)
+      message1 = Message.create(to:to,from:from,subject:"subject",message:"message",created_at:"January 15, 1974")
+      message2 = Message.create(to:to,from:from,subject:"subject",message:"message",created_at:"January 1, 1974")
       Message.all.should eql([message1,message2])
     end
   end

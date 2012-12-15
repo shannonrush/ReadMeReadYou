@@ -14,7 +14,8 @@ describe Critique do
   describe 'after_create :send_notification' do
     it 'should send an email to author' do
       ActionMailer::Base.deliveries = []
-      user = FactoryGirl.create(:user_no_after_create)
+      User.any_instance.stub(:send_welcome)
+      user = FactoryGirl.create(:user)
       submission = FactoryGirl.create(:submission,user:user)
       new_critique = FactoryGirl.create(:critique,submission:submission)
       ActionMailer::Base.deliveries.count.should eql(1)
@@ -26,9 +27,10 @@ describe Critique do
   describe 'after_create :alert_for_new_critique' do
     it 'should generate one alert for author with critique link and correct message' do
       Alert.count.should eql(0)
-      user = FactoryGirl.create(:user_no_after_create)
+      User.any_instance.stub(:send_welcome)
+      user = FactoryGirl.create(:user)
       submission = FactoryGirl.create(:submission,user:user)
-      critiquer = FactoryGirl.create(:user_no_after_create,email:"cr@rmry.com")
+      critiquer = FactoryGirl.create(:user)
       new_critique = FactoryGirl.create(:critique,user:critiquer,submission:submission)
       Alert.count.should eql(1)
       alert = Alert.first
@@ -42,15 +44,20 @@ describe Critique do
   describe 'after_update :report_if_abusive_rating' do
     before(:each) do
       ActionMailer::Base.deliveries = []
-      critiquer = FactoryGirl.create(:user_no_after_create,email:"cr@rmry.com")
-      @new_critique = FactoryGirl.create(:critique_no_after_create,user:critiquer)
+      User.any_instance.stub(:send_welcome)
+      critiquer = FactoryGirl.create(:user)
+      Critique.any_instance.stub(:send_notification)
+      Critique.any_instance.stub(:alert_for_new_critique)
+      @new_critique= FactoryGirl.create(:critique,user:critiquer)
     end
+
     it 'should send an email to support if rating -1' do
       @new_critique.update_attribute(:rating,-1)
       ActionMailer::Base.deliveries.count.should eql(1)
       mail = ActionMailer::Base.deliveries.first
       mail['to'].to_s.should match "support@readmereadyou.com"
     end
+
     it 'should not send an email if rating not -1' do
       @new_critique.update_attribute(:rating,10)
       ActionMailer::Base.deliveries.count.should eql(0)
@@ -59,8 +66,11 @@ describe Critique do
 
   describe 'after_update :alert_for_rating' do
     before(:each) do
-      critiquer = FactoryGirl.create(:user_no_after_create,email:"cr@rmry.com")
-      @new_critique = FactoryGirl.create(:critique_no_after_create,user:critiquer)
+      User.any_instance.stub(:send_welcome)
+      critiquer = FactoryGirl.create(:user)
+      Critique.any_instance.stub(:send_notification)
+      Critique.any_instance.stub(:alert_for_new_critique)
+      @new_critique = FactoryGirl.create(:critique,user:critiquer)
     end
     it 'should generate one alert if rating updated' do
       Alert.count.should eql(0)
@@ -82,8 +92,8 @@ describe Critique do
   
   describe 'default_scope' do
     it 'should sort by created_at with latest first' do
-      earliest = Critique.create(content:"content",created_at:"January 1, 1974")
-      latest = Critique.create(content:"content",created_at:"January 15, 1974")
+      earliest = FactoryGirl.create(:critique,content:"content",created_at:"January 1, 1974")
+      latest = FactoryGirl.create(:critique,content:"content",created_at:"January 15, 1974")
       Critique.all.should eql([latest,earliest])
     end
   end
