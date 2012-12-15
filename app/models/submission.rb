@@ -11,7 +11,12 @@ class Submission < ActiveRecord::Base
   validates_presence_of :title
   validates_presence_of :content, :message => "file must be chosen"
   validates_presence_of :user
-
+  validates :content, :length => {
+           :maximum   => 10000,
+           :tokenizer => lambda { |str| str.split },
+           :too_long => "is too long, maximum is 10000 words"
+  }
+  
   default_scope order('created_at DESC')
 
   # submission is active if it is less than a week old or it has less than 5 critiques

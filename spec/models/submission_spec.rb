@@ -24,6 +24,22 @@ describe Submission do
       submission.update_attribute(:user,nil)
       submission.should_not be_valid
     end
+    it 'is not valid if content is greater than 10000 words' do
+      submission.should be_valid
+      content = ""
+      10001.times {content << "word "}
+      submission.update_attribute(:content,content)
+      submission.word_count.should eql(10001)
+      submission.should_not be_valid
+    end
+    it 'is valid if content is less than 10000 words' do
+      submission.should be_valid
+      content = ""
+      9999.times {content << "word "}
+      submission.update_attribute(:content,content)
+      submission.word_count.should eql(9999)
+      submission.should be_valid
+    end
   end
 
   describe 'default_scope' do
