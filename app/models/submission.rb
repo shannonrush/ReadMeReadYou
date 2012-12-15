@@ -23,6 +23,8 @@ class Submission < ActiveRecord::Base
 
   scope :active, joins("LEFT OUTER JOIN critiques ON critiques.submission_id = submissions.id").group("submissions.id").having("count(critiques.id)<5 OR submissions.created_at > ?", Time.zone.now-1.week)
 
+  after_create :alert_previous_critiquers
+
   def self.ordered_by(order_by)
     if order_by == "author"
       return Submission.active.sort {|a,b| a.user.last <=> b.user.last}
@@ -61,6 +63,39 @@ class Submission < ActiveRecord::Base
 
   def word_count
     self.content.split.size
+  end
+
+  def title_critiquers
+    # returns unique list of users previously critiquing title
+    prev_subs_with_title = self.user.submissions.collect {|s| s if s.title == self.title}.compact
+    prev_subs_critiques = prev_subs_with_title.collect {|s| s.critiques}.flatten
+    return prev_subs_critiques.collect {|c| c.user}.uniq
+  end
+
+  def author_critiquers
+    # returns unique list of users previous critiquing author
+    prev_subs = self.user.submissions
+    prev_critiques = prev_subs.collect {|s| s.critiques}.flatten
+    return prev_critiques.collect {|c| c.user}.uniq
+  end
+
+  protected
+
+  def alert_previous_critiquers
+    self.user.submissions.reload
+    title_critiquers = self.title_critiquers
+    author_critiquers = self.author_critiquers - title_critiquers
+
+    title_critiquers.each {|c| alert_title_critiquer(c.id)}
+    author_critiquers.each {|c| alert_author_critiquer(c.id)}
+  end
+
+  def alert_title_critiquer(critiquer_id)
+    Alert.generate(critiquer_id,"#{self.title} has a new submission","/submissions/#{self.id}") 
+  end
+
+  def alert_author_critiquer(critiquer_id)
+    Alert.generate(critiquer_id,"#{self.user.full_name} has a new submission","/submissions/#{self.id}")
   end
 
 end

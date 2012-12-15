@@ -78,6 +78,68 @@ describe Submission do
     end
   end
 
+  describe 'after_create :alert_previous_critiquers' do 
+    before(:each) do
+      @prev_submission = FactoryGirl.create(:submission)
+      @author = @prev_submission.user
+      @prev_critique = FactoryGirl.create(:critique,submission:@prev_submission)
+      Alert.destroy_all
+    end
+
+    it 'creates alert for all previous critiquers of author' do
+      new_submission = FactoryGirl.create(:submission,user:@author)
+      Alert.count.should eql(1)
+      @prev_critique.user.alerts.count.should eql(1)
+    end
+
+    it 'creates alert about new author submission with submission link if not previous critiquer of title' do
+      new_submission = FactoryGirl.create(:submission,user:@author,title:"Different Title")
+      @prev_critique.user.alerts.count.should eql(1)
+      alert = @prev_critique.user.alerts.first
+      alert.message.should match "#{@author.full_name} has a new submission" 
+      alert.link.should match "/submissions/#{new_submission.id}"
+    end
+
+    it 'creates alert about new title submission with submission link if previous critiquer of title' do
+      new_submission = FactoryGirl.create(:submission,user:@author,title:@prev_submission.title)
+      @prev_critique.user.alerts.count.should eql(1)
+      alert = @prev_critique.user.alerts.first
+      alert.message.should match "#{new_submission.title} has a new submission" 
+      alert.link.should match "/submissions/#{new_submission.id}"
+    end
+  end
+  
+  describe '#title_critiquers' do
+    before(:each) do
+      @prev_submission = FactoryGirl.create(:submission) 
+      @author = @prev_submission.user
+      @prev_critique = FactoryGirl.create(:critique,submission:@prev_submission)
+    end
+
+    it 'includes user who has previously critiqued title' do
+      new_submission = FactoryGirl.create(:submission,user:@author,title:@prev_submission.title)
+      @author.submissions.reload
+      new_submission.title_critiquers.should include(@prev_critique.user)
+    end
+
+    it 'does not include user who has previously critiqued author submission with different title' do
+      new_submission = FactoryGirl.create(:submission,user:@author,title:"Different Title")
+      @author.submissions.reload
+      new_submission.title_critiquers.should_not include(@prev_critique.user)
+    end
+  end
+
+  describe '#author_critiquers' do
+    it 'includes user who has previously critiqued submission by author' do
+      prev_submission = FactoryGirl.create(:submission) 
+      author = prev_submission.user
+      prev_critique = FactoryGirl.create(:critique,submission:prev_submission)
+      new_submission = FactoryGirl.create(:submission,user:author)
+      author.submissions.reload
+      new_submission.author_critiquers.should include(prev_critique.user)
+    end
+  end
+
   describe '#self.ordered_by(order_by)' do
     before (:each) do
       author1 = FactoryGirl.create(:user,last:"Aush")
