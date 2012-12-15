@@ -36,7 +36,7 @@ form {
     font-size:1.2em;
   }
   input[type=email], input[type=password], input[type=text] {
-    background-color:$light_grey !important;
+    background-color:$light_grey;
     height:25px;
     padding:3px;
     font-size:1.1em;
@@ -109,14 +109,34 @@ div#content_header {
 div#content {
   width:80%;
   font-family:$easy_reading;
+}
+div#list_header {
+  margin-bottom:20px;
+}
+.white_box {
   color: black;
   padding:25px;
   background-color:white;
   border-radius:30px;
-  p {
-    margin-bottom:1em;
-  }
 }
-div#list_header {
-  margin-bottom:20px;
+.grey_box {
+  color: black;
+  padding:25px;
+  background-color:white;
+  border-radius:30px;
+  background-color:$light_grey;
+  border: 5px solid black;
+  label {
+    font-weight:normal;
+  }
+  h2 {
+    font-weight:normal !important;
+    font-size:1.2em;
+  }
+  textarea {
+    background-color:white;
+  }
+  input[type=text] {
+    background-color:white;
+  }
 }

@@ -1,4 +1,4 @@
-%div#new_comment.comment
+%div#new_comment.comment.grey_box
   =form_for @comment do |f|
     =f.hidden_field :user_id, :value => current_user.id
     =f.hidden_field :critique_id, :value => @critique.id

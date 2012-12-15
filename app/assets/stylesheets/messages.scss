@@ -9,19 +9,10 @@
 
 div#new_message {
   width:80%;
-  margin-top:20px;
   font-family:$font-family;
-  color: black;
-  padding: 25px;
-  background-color:white;
-  border-radius:30px;
-  border: 5px solid $blue;
-  font-weight:normal;
+  padding-top:0;
   h2 {
-    font-weight:normal;
-  }
-  a {
-    color:$dark_blue;
+    font-size:1.5em;
   }
   textarea {
     width:90%;
@@ -67,14 +58,15 @@ div.message {
 div.read_message {
   display:none;
   width:80%;
-  margin-top:20px;
-  margin-bottom:20px;
+  padding-top:10px;
+  padding-bottom:10px;
+  padding-left:20px;
+  padding-right:15px;
+  margin-top:10px;
+  margin-bottom:10px;
   font-family:$font-family;
-  color: black;
-  padding: 25px;
-  background-color:white;
-  border-radius:30px;
   font-weight:normal;
+  border: 5px solid black;
   a {
     color: $dark_blue;
   }

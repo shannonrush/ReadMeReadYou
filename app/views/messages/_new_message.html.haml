@@ -1,4 +1,4 @@
-%div#new_message{:class => new_message_visibility(@message)}
+%div#new_message.grey_box{:class => new_message_visibility(@message)}
   =form_for @message do |f|
     =render "messages/errors"
     %h2
@@ -15,4 +15,4 @@
       %p=f.label :message
       %p=f.text_area :message
     %div
-      %p=image_submit_tag("on_white_submit_button.png")
+      %p=image_submit_tag("submit_button.png")
