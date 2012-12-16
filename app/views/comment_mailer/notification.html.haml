@@ -1,0 +1,6 @@
+%p
+  Hi #{@user.first},
+%p
+  We thought you'd like to know the critique for #{@comment.critique.submission.title} has #{link_to "a new comment", critique_url(@comment.critique)}.
+%p
+  Happy Writing!

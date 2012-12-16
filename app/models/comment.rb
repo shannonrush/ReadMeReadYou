@@ -6,9 +6,25 @@ class Comment < ActiveRecord::Base
 
   attr_accessible :content, :critique, :critique_id, :user, :user_id
 
-  after_create :alerts_for_new_comment
+  after_create :alerts_for_new_comment, :emails_for_new_comment
 
-  #protected
+  protected
+
+  def emails_for_new_comment
+    email_critiquer
+    email_other_commenters
+  end
+
+  def email_critiquer
+    CommentMailer.notification(self,self.critique.user).deliver
+  end
+
+  def email_other_commenters
+    other_commenters = self.other_commenters
+    other_commenters.each do |u|
+      CommentMailer.notification(self,u).deliver
+    end
+  end
 
   def alerts_for_new_comment
     title = self.critique.submission.title_with_chapters

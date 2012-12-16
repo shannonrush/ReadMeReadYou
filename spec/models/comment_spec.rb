@@ -20,6 +20,42 @@ describe Comment do
     end
   end
 
+  describe 'after_create :emails_for_new_comment' do
+    before(:each) do
+      @critique = FactoryGirl.create(:critique)
+      @commenter = FactoryGirl.create(:user)
+      ActionMailer::Base.deliveries = []
+    end
+
+    it 'should send one email to critiquer' do
+      ActionMailer::Base.deliveries.count.should eql(0)
+      comment = FactoryGirl.create(:comment,user:@commenter,critique:@critique)
+      ActionMailer::Base.deliveries.count.should eql(1)
+      mail = ActionMailer::Base.deliveries.first
+      mail['to'].to_s.should match @critique.user.email
+    end
+    
+    it 'should send one email to all other commenters' do
+      prev_comment = FactoryGirl.create(:comment,critique:@critique)
+      ActionMailer::Base.deliveries = []
+      comment = FactoryGirl.create(:comment,user:@commenter,critique:@critique)
+      ActionMailer::Base.deliveries.count.should eql(2)
+      mails = ActionMailer::Base.deliveries
+      emails = mails.collect {|m| m['to'].to_s}
+      emails.should include(prev_comment.user.email)
+    end
+
+    it 'should not send an email to commenter' do
+      prev_comment = FactoryGirl.create(:comment,critique:@critique)
+      ActionMailer::Base.deliveries = []
+      comment = FactoryGirl.create(:comment,user:@commenter,critique:@critique)
+      ActionMailer::Base.deliveries.count.should eql(2)
+      mails = ActionMailer::Base.deliveries
+      emails = mails.collect {|m| m['to'].to_s}
+      emails.should_not include(comment.user.email)
+    end
+  end
+
   describe 'after_create :alerts_for_new_comment' do
     it 'should generate alerts with critique link' do
       Alert.count.should eql(0)
