@@ -21,6 +21,10 @@ gem 'uglifier'
 gem 'execjs'
 gem 'therubyracer', '0.10.2'
 
+group :production do
+  gem 'rack-google_analytics', :require => "rack/google_analytics"
+end
+
 group :development do
  gem 'thin'
  gem 'quiet_assets'
