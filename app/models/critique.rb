@@ -8,7 +8,8 @@ class Critique < ActiveRecord::Base
   validates_presence_of :content, :message => "file must be chosen"
 
   after_create :send_notification, :alert_for_new_critique
-  after_update :report_if_abusive_rating, :alert_for_rating
+  after_update :report_if_abusive_rating
+  after_update :alert_for_rating, :if => :rating_changed?
 
   default_scope order('created_at DESC')
 
@@ -33,9 +34,7 @@ class Critique < ActiveRecord::Base
 
   def alert_for_rating
     # alert critiquer of rating 
-    if @changed_attributes.keys.include?("rating") && self.rating.present?
       Alert.generate(self.user.id,"Your critique for #{self.submission.title_with_chapters} has been rated","/critiques/#{self.id}")
-    end
   end
 
   def send_notification
