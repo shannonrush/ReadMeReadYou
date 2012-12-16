@@ -1,7 +1,7 @@
 class SubmissionsController < ApplicationController
 
   before_filter :check_logged_in
-  before_filter :check_for_submission, :only => [:show,:update]
+  before_filter :check_for_submission, :only => [:show,:update,:edit]
   before_filter :check_authorization_for_update, :only => [:edit, :update]
   before_filter :check_authorization_for_create, :only => :create
 

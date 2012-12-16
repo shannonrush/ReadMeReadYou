@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
 
   before_filter :check_logged_in
-  before_filter :check_for_user, :only => [:show,:update]
+  before_filter :check_for_user, :only => [:show,:update,:edit]
   before_filter :check_for_profile, :only => :show
   before_filter :check_authorization, :only => [:edit, :update]
 
