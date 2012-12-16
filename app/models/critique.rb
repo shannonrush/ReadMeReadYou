@@ -33,7 +33,7 @@ class Critique < ActiveRecord::Base
 
   def alert_for_rating
     # alert critiquer of rating 
-    if self.rating.present?
+    if @changed_attributes.keys.include?("rating") && self.rating.present?
       Alert.generate(self.user.id,"Your critique for #{self.submission.title_with_chapters} has been rated","/critiques/#{self.id}")
     end
   end
