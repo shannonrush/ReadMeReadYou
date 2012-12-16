@@ -14,6 +14,7 @@ class UsersController < ApplicationController
   end
 
   def show
+    raise "test"
     @submissions = params[:submissions]=="all" ? @user.submissions : @user.submissions.limit(5)
     @critiques = params[:critiques]=="all" ? @user.critiques : @user.critiques.limit(5)
     @alerts = params[:alerts]=="all" ? Alert.uncleared.for_user(@user) : Alert.uncleared.for_user(@user).limit(5)
