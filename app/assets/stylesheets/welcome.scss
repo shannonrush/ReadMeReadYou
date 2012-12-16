@@ -1,0 +1,21 @@
+div#intro {
+  width:80%;
+  margin: 0 auto;
+  p.lead, p.follow {
+    font-size:1.7em;
+  }
+  li {
+    list-style-type: none;
+    background: url('asterisk_li.png') no-repeat 0 50%;
+    height:30px;
+    padding-left: 40px;
+    margin-bottom:10px;
+    font-size:1.5em;
+    line-height: 30px; 
+    vertical-align:middle;
+  }
+  #intro_button {
+    width:200px;
+    margin-left:200px;
+  }
+}
