@@ -3,9 +3,9 @@ source 'http://rubygems.org'
 gem 'rails', '3.2.9'
 gem 'mysql2'
 
-gem 'exception_notification'
-
 gem "paperclip", "~> 3.0"
+
+gem 'exception_notification', :require => 'exception_notifier'
 
 gem 'haml-rails'
 gem 'sass'
