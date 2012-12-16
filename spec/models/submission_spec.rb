@@ -174,6 +174,7 @@ describe Submission do
     it 'returns active sorted by genre A-Z when genre' do
       Submission.ordered_by("genre").should eql([@submission1,@submission2])
     end
+      
   end
 
   describe '#title_with_chapters' do

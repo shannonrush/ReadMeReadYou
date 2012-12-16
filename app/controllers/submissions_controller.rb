@@ -6,8 +6,7 @@ class SubmissionsController < ApplicationController
   before_filter :check_authorization_for_create, :only => :create
 
   def index
-    order_by = params[:sort].present? ? params[:sort] : "created_at"
-    @submissions = Submission.ordered_by(order_by)
+    @submissions = Submission.ordered_by(params[:sort])
   end
 
   def new

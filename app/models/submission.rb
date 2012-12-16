@@ -36,8 +36,10 @@ class Submission < ActiveRecord::Base
       return Submission.active.sort {|a,b| a.title <=> b.title}
     elsif order_by == "genre"
       return Submission.active.sort {|a,b| a.genre <=> b.genre}
+    elsif order_by == "created_at"
+      return Submission.active.order("created_at")
     else
-      return Submission.active.order(order_by)
+      return Submission.active.shuffle
     end
   end
 
