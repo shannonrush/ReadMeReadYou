@@ -3,6 +3,12 @@ require 'spec_helper'
 describe SubmissionsController do
   let (:submission) {FactoryGirl.create(:submission)}
   let (:user) {FactoryGirl.create(:user, email:"sub@rmry.com")}
+
+  describe '#activate_submissions' do
+    it 'should remove submission from queue if author has no active submission'
+    it 'should not remove submission from queue if author has active submission'
+  end
+
   describe '#check_logged_in' do
     it 'should redirect to sign in if no current user' do
       post :create

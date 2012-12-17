@@ -4,6 +4,7 @@ class SubmissionsController < ApplicationController
   before_filter :check_for_submission, :only => [:show,:update,:edit]
   before_filter :check_authorization_for_update, :only => [:edit, :update]
   before_filter :check_authorization_for_create, :only => :create
+  before_filter :activate_submissions, :only => :index
 
   def index
     @submissions = Submission.ordered_by(params[:sort])
@@ -41,6 +42,10 @@ class SubmissionsController < ApplicationController
   end
 
   protected
+
+  def activate_submissions
+    Submission.activate_submissions
+  end
 
   def check_logged_in
     authenticate_user!

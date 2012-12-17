@@ -19,6 +19,10 @@ class User < ActiveRecord::Base
 
   after_create :send_welcome
 
+  scope :has_queued_submissions, joins("INNER JOIN submissions  AS queued_submissions on queued_submissions.user_id = users.id AND queued_submissions.queued IS TRUE")  
+  scope :without_active_submission, select("DISTINCT users.*").joins("LEFT OUTER JOIN submissions on submissions.user_id = users.id").merge(Submission.inactive)
+  scope :needs_submission_activated, has_queued_submissions.without_active_submission
+
   def full_name
     if self.first && self.last
       self.first+" "+self.last

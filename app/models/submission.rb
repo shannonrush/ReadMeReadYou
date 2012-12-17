@@ -19,11 +19,17 @@ class Submission < ActiveRecord::Base
   
   default_scope order('created_at DESC')
 
-  # submission is active if it is less than a week old or it has less than 5 critiques
+  scope :not_in_queue, where("queued IS NOT TRUE")
+  scope :in_queue, where(queued:true)
+  scope :needs_time_or_critiques, joins("LEFT OUTER JOIN critiques ON critiques.submission_id = submissions.id").group("submissions.id").having("count(critiques.id)<5 OR submissions.created_at > ?", Time.zone.now-1.week)
+   scope :does_not_need_time, where("submissions.id IS NULL OR submissions.created_at < ?",Time.zone.now-1.week)
+  scope :does_not_need_critiques, joins("LEFT OUTER JOIN critiques ON critiques.submission_id = submissions.id").group("submissions.id").having("submissions.id IS NULL OR count(critiques.id)>4")
 
-  scope :active, joins("LEFT OUTER JOIN critiques ON critiques.submission_id = submissions.id").group("submissions.id").having("count(critiques.id)<5 OR submissions.created_at > ?", Time.zone.now-1.week)
+  scope :active, needs_time_or_critiques.not_in_queue
+  scope :inactive, does_not_need_time.does_not_need_critiques
 
-  after_create :alert_previous_critiquers
+  after_create :add_to_queue, :if => :author_has_active_submission?
+  after_create :alert_previous_critiquers, :unless => :queued?
 
   def self.ordered_by(order_by)
     if order_by == "author"
@@ -80,8 +86,20 @@ class Submission < ActiveRecord::Base
     prev_critiques = prev_subs.collect {|s| s.critiques}.flatten
     return prev_critiques.collect {|c| c.user}.uniq
   end
+  
+  def author_has_active_submission?
+    [Submission.active & self.user.submissions-[self]].flatten.any?
+  end
+
+  def self.activate_submissions
+    #User.needs_submission_activated
+  end
 
   protected
+
+  def add_to_queue
+    self.update_attribute(:queued,true)
+  end
 
   def alert_previous_critiquers
     self.user.submissions.reload

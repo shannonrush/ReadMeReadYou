@@ -34,6 +34,75 @@ describe User do
     end
   end
 
+  describe 'scope :has_queued_submissions' do
+    it 'includes user if any submissions in queue' do
+      new_submission = FactoryGirl.create(:submission,user:user,queued:true)
+      Submission.in_queue.should include(new_submission)
+      User.has_queued_submissions.should include(user)
+    end
+    it 'does not include user if does not have any submissions in queue)' do
+      new_submission = FactoryGirl.create(:submission,user:user)
+      Submission.in_queue.should_not include(new_submission)
+      User.has_queued_submissions.should_not include(user)
+    end
+  end
+
+  describe 'scope :without_active_submission' do
+    it 'includes user who does not have any submissions' do
+      user.submissions.count.should eql(0)
+      User.without_active_submission.should include(user)
+    end
+    
+    it 'includes user who has a submission that does not need time or critiques' do
+      submission = FactoryGirl.create(:submission,user:user,created_at:Time.zone.now-8.days) 
+      5.times {FactoryGirl.create(:critique,submission:submission)}
+      user.submissions.should include(submission)
+      Submission.inactive.should include(submission)
+      User.without_active_submission.should include(user)
+    end
+
+    it 'excludes user who has a submission that needs time and does not need critiques' do
+      submission = FactoryGirl.create(:submission,user:user,created_at:Time.zone.now-8.days) 
+      user.submissions.should include(submission)
+      Submission.inactive.should_not include(submission)
+      User.without_active_submission.should_not include(user)
+    end
+
+    it 'excludes user who has submission that does not need time and needs critiques' do
+      submission = FactoryGirl.create(:submission,user:user,created_at:Time.zone.now-8.days) 
+      user.submissions.should include(submission)
+      Submission.inactive.should_not include(submission)
+      User.without_active_submission.should_not include(user)
+    end
+  end
+
+  describe 'scope :needs_submission_activated' do
+    it 'includes user with a submission in queue and an inactive submission' do
+      submission1 = FactoryGirl.create(:submission,user:user,created_at:Time.zone.now-8.days)
+      5.times {FactoryGirl.create(:critique,submission:submission1)}
+      Submission.inactive.should include(submission1)
+      submission2 = FactoryGirl.create(:submission,user:user,queued:true)
+      Submission.in_queue.should include(submission2)
+      User.has_queued_submissions.should include(user)
+      User.without_active_submission.should include(user)
+      User.needs_submission_activated.should include(user)
+    end
+
+    it 'excludes user with no submissions' do
+      user.submissions.count.should eql(0)
+      User.needs_submission_activated.should_not include(user)
+    end
+
+    it 'excludes user with inactive submission and no submission in queue' do
+      submission1 = FactoryGirl.create(:submission,user:user,created_at:Time.zone.now-8.days)
+      5.times {FactoryGirl.create(:critique,submission:submission1)}
+      Submission.inactive.should include(submission1)
+      User.without_active_submission.should include(user)
+      User.has_queued_submissions.should_not include(user)
+      User.needs_submission_activated.should_not include(user)
+    end
+  end
+
   describe '#full_name' do
     it 'returns first + last name if first and last' do
       user.first.should_not be_nil
