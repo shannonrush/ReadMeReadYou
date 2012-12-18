@@ -3,7 +3,7 @@ class Submission < ActiveRecord::Base
   has_many :chapters, :dependent => :destroy
   has_many :critiques
 
-  attr_accessible :content, :notes, :title, :user_id, :genre
+  attr_accessible :content, :notes, :title, :user_id, :genre, :activated_at, :queued
 
   Submission::GENRES = ["Action","Crime","Fantasy","Historical","Horror","Mystery","Romance","SciFi","Western"]
 
@@ -21,8 +21,8 @@ class Submission < ActiveRecord::Base
 
   scope :not_in_queue, where("queued IS NOT TRUE")
   scope :in_queue, where(queued:true)
-  scope :needs_time_or_critiques, joins("LEFT OUTER JOIN critiques ON critiques.submission_id = submissions.id").group("submissions.id").having("count(critiques.id)<5 OR submissions.created_at > ?", Time.zone.now-1.week)
-   scope :does_not_need_time, where("submissions.id IS NULL OR submissions.created_at < ?",Time.zone.now-1.week)
+  scope :needs_time_or_critiques, joins("LEFT OUTER JOIN critiques ON critiques.submission_id = submissions.id").group("submissions.id").having("count(critiques.id)<5 OR submissions.activated_at > ?", Time.zone.now-1.week)
+   scope :does_not_need_time, where("submissions.id IS NULL OR submissions.activated_at < ?",Time.zone.now-1.week)
   scope :does_not_need_critiques, joins("LEFT OUTER JOIN critiques ON critiques.submission_id = submissions.id").group("submissions.id").having("submissions.id IS NULL OR count(critiques.id)>4")
 
   scope :active, needs_time_or_critiques.not_in_queue
@@ -30,6 +30,7 @@ class Submission < ActiveRecord::Base
 
   after_create :add_to_queue, :if => :author_has_active_submission?
   after_create :alert_previous_critiquers, :unless => :queued?
+  after_create :add_activated_at, :unless => :queued?
 
   def self.ordered_by(order_by)
     if order_by == "author"
@@ -42,8 +43,8 @@ class Submission < ActiveRecord::Base
       return Submission.active.sort {|a,b| a.title <=> b.title}
     elsif order_by == "genre"
       return Submission.active.sort {|a,b| a.genre <=> b.genre}
-    elsif order_by == "created_at"
-      return Submission.active.order("created_at")
+    elsif order_by == "activated_at"
+      return Submission.active.order("activated_at")
     else
       return Submission.active.shuffle
     end
@@ -92,15 +93,17 @@ class Submission < ActiveRecord::Base
   end
 
   def self.activate_submissions
-    #User.needs_submission_activated
+    User.needs_submission_activated.each do |u|
+      submission = self.first_queued_for_user(u)
+      submission.update_attributes(queued:false,activated_at:Time.zone.now)
+      submission.alert_previous_critiquers
+    end
   end
 
-  protected
-
-  def add_to_queue
-    self.update_attribute(:queued,true)
+  def self.first_queued_for_user(user)
+    user.submissions.where(queued:true).first 
   end
-
+  
   def alert_previous_critiquers
     self.user.submissions.reload
     title_critiquers = self.title_critiquers
@@ -110,12 +113,22 @@ class Submission < ActiveRecord::Base
     author_critiquers.each {|c| alert_author_critiquer(c.id)}
   end
 
+  protected
+
+  def add_to_queue
+    self.update_attribute(:queued,true)
+  end
+
   def alert_title_critiquer(critiquer_id)
     Alert.generate(critiquer_id,"#{self.title} has a new submission","/submissions/#{self.id}") 
   end
 
   def alert_author_critiquer(critiquer_id)
     Alert.generate(critiquer_id,"#{self.user.full_name} has a new submission","/submissions/#{self.id}")
+  end
+
+  def add_activated_at
+    self.update_attribute(:activated_at,self.created_at)
   end
 
 end

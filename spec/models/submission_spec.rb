@@ -83,26 +83,26 @@ describe Submission do
 
   describe 'scope :needs_time_or_critiques' do
     it 'includes submissions less than a week old with less than 5 critiques' do
-      submission.update_attribute(:created_at,Time.zone.now)
+      submission.update_attribute(:activated_at,Time.zone.now)
       submission.critiques.count.should eql(0)
       Submission.needs_time_or_critiques.should include(submission)
     end
 
     it 'includes submissions less than a week old with greater than 4 critiques' do
-      submission.update_attribute(:created_at,Time.zone.now)
+      submission.update_attribute(:activated_at,Time.zone.now)
       5.times {FactoryGirl.create(:critique,submission:submission)}
       submission.critiques.count.should eql(5)
       Submission.needs_time_or_critiques.should include(submission)
     end
     
     it 'includes submissions greater than a week old with less than 5 critiques' do
-      submission.update_attribute(:created_at,Time.zone.now - 8.days)
+      submission.update_attribute(:activated_at,Time.zone.now - 8.days)
       submission.critiques.count.should eql(0)
       Submission.needs_time_or_critiques.should include(submission)
     end
 
     it 'does not include submissions greater than a week oldwith more than 5 critiques' do
-      submission.update_attribute(:created_at,Time.zone.now - 8.days)
+      submission.update_attribute(:activated_at,Time.zone.now - 8.days)
       5.times {FactoryGirl.create(:critique,submission:submission)}
       submission.critiques.count.should eql(5)
       Submission.needs_time_or_critiques.should_not include(submission)
@@ -111,7 +111,7 @@ describe Submission do
 
   describe 'scope :does_not_need_time' do
     it 'includes submission if created more than a week ago' do
-      submission.update_attribute(:created_at,8.days.ago)
+      submission.update_attribute(:activated_at,8.days.ago)
       Submission.does_not_need_time.should include(submission)
     end
     it 'does not include submission if created less than a week ago' do
@@ -144,7 +144,7 @@ describe Submission do
       Submission.active.should_not include(submission)
     end
     it 'excludes submission not in needs_time_or_critiques if in queue' do
-      submission.update_attribute(:created_at,Time.zone.now - 8.days)
+      submission.update_attribute(:activated_at,Time.zone.now - 8.days)
       5.times {FactoryGirl.create(:critique,submission:submission)}
       Submission.needs_time_or_critiques.should_not include(submission)
       submission.update_attribute(:queued,true)
@@ -152,7 +152,7 @@ describe Submission do
       Submission.active.should_not include(submission)
     end
     it 'excludes submission not in needs_time_or_critiques if not in queue' do
-      submission.update_attribute(:created_at,Time.zone.now - 8.days)
+      submission.update_attribute(:activated_at,Time.zone.now - 8.days)
       5.times {FactoryGirl.create(:critique,submission:submission)}
       Submission.needs_time_or_critiques.should_not include(submission)
       Submission.not_in_queue.should include(submission)
@@ -163,7 +163,7 @@ describe Submission do
   describe 'scope :inactive' do
     it 'includes submission if it does not need time and does not need critique' do
       5.times {FactoryGirl.create(:critique,submission:submission)}
-      submission.update_attribute(:created_at,Time.zone.now - 8.days)
+      submission.update_attribute(:activated_at,Time.zone.now - 8.days)
       Submission.does_not_need_time.should include(submission)
       Submission.does_not_need_critiques.should include(submission)
       Submission.inactive.should include(submission)
@@ -177,7 +177,7 @@ describe Submission do
     end
     
     it 'excludes submission if it does need time and needs critiques' do
-      submission.update_attribute(:created_at,Time.zone.now - 8.days)
+      submission.update_attribute(:activated_at,Time.zone.now - 8.days)
       Submission.does_not_need_time.should include(submission)
       Submission.does_not_need_critiques.should_not include(submission)
       Submission.inactive.should_not include(submission)
@@ -193,7 +193,7 @@ describe Submission do
 
     it 'does not set queued if author has no active submission' do
       5.times {FactoryGirl.create(:critique,submission:submission)}
-      submission.update_attribute(:created_at,Time.zone.now - 8.days)
+      submission.update_attribute(:activated_at,Time.zone.now - 8.days)
       new_submission = FactoryGirl.create(:submission,user:submission.user)
       new_submission.author_has_active_submission?.should be_false
       new_submission.queued?.should be_false
@@ -210,7 +210,7 @@ describe Submission do
 
     it 'creates alert for all previous critiquers of author if author has no active submission' do
       5.times {FactoryGirl.create(:critique,submission:@prev_submission)}
-      @prev_submission.update_attribute(:created_at,Time.zone.now - 8.days)
+      @prev_submission.update_attribute(:activated_at,Time.zone.now - 8.days)
       Alert.destroy_all
       new_submission = FactoryGirl.create(:submission,user:@author)
       new_submission.author_has_active_submission?.should be_false
@@ -227,7 +227,7 @@ describe Submission do
 
     it 'creates alert about new author submission with submission link if not previous critiquer of title' do
       5.times {FactoryGirl.create(:critique,submission:@prev_submission)}
-      @prev_submission.update_attribute(:created_at,Time.zone.now - 8.days)
+      @prev_submission.update_attribute(:activated_at,Time.zone.now - 8.days)
       Alert.destroy_all
       new_submission = FactoryGirl.create(:submission,user:@author,title:"Different Title")
       @prev_critique.user.alerts.count.should eql(1)
@@ -238,7 +238,7 @@ describe Submission do
 
     it 'creates alert about new title submission with submission link if previous critiquer of title' do
       5.times {FactoryGirl.create(:critique,submission:@prev_submission)}
-      @prev_submission.update_attribute(:created_at,Time.zone.now - 8.days)
+      @prev_submission.update_attribute(:activated_at,Time.zone.now - 8.days)
       Alert.destroy_all
       new_submission = FactoryGirl.create(:submission,user:@author,title:@prev_submission.title)
       @prev_critique.user.alerts.count.should eql(1)
@@ -247,6 +247,21 @@ describe Submission do
       alert.link.should match "/submissions/#{new_submission.id}"
     end
   end
+
+  describe 'after_create :add_activated_at' do
+    it 'updates activated_at to created_at if not in queue' do
+      new_submission = FactoryGirl.create(:submission)
+      new_submission.queued.should_not be_true
+      new_submission.activated_at.should eql(new_submission.created_at)
+    end
+
+    it 'does not update activated_at if in queue' do
+      new_submission = FactoryGirl.create(:submission,user:submission.user)
+      new_submission.queued.should be_true
+      new_submission.activated_at.should be_nil
+    end
+  end
+
   
   describe '#title_critiquers' do
     before(:each) do
@@ -313,8 +328,8 @@ describe Submission do
       Submission.ordered_by("critique_count").should eql([@submission1,@submission2])
     end
 
-    it 'returns active sorted by created_at with latest first when created_at' do
-      Submission.ordered_by("created_at").first.should eql(@submission2)
+    it 'returns active sorted by activated_at with latest first when activated_at' do
+      Submission.ordered_by("activated_at").first.should eql(@submission2)
     end
 
     it 'returns active sorted by title A-Z when title' do
@@ -360,9 +375,91 @@ describe Submission do
   end
 
   describe 'self.activate_submissions' do
-    it 'should set queued to false if author has no active submission'
-    it 'should not set queued to false if author has active submission'
-    it 'should alert previous critiquers if removed from queue'
-    it 'should not alert previous critiquers if not removed from queue'
+    before(:each) do
+      @author = FactoryGirl.create(:user)
+      @old_submission = FactoryGirl.create(:submission,user:@author,created_at:Time.zone.now-8.days)
+      5.times {FactoryGirl.create(:critique,submission:@old_submission)}
+      @queued_submission = FactoryGirl.create(:submission,user:@author,queued:true)
+    end
+    
+    it 'should set author earliest queued to false if author has no active submission' do
+      Submission.active.should_not include(@queued_submission)
+      User.without_active_submission.should include(@author)
+      @queued_submission.queued.should be_true
+      Submission.activate_submissions
+      @queued_submission.reload
+      @queued_submission.queued.should be_false
+    end
+
+    it 'should not set any other than earliest queued to false if author has no active submission' do
+      earliest_queued = FactoryGirl.create(:submission,user:@author,created_at:@queued_submission.created_at - 1.day,queued:true)
+      earliest_queued.queued.should be_true
+      Submission.activate_submissions
+      earliest_queued.reload
+      @queued_submission.reload
+      earliest_queued.created_at.should be < @queued_submission.created_at
+      earliest_queued.queued.should be_true
+      @queued_submission.queued.should be_false
+    end
+
+    it 'should not set any queued to false if author has active submission' do
+      @old_submission.update_attribute(:activated_at,Time.zone.now)
+      Submission.active.should include(@old_submission)
+      Submission.in_queue.should include(@queued_submission)
+      Submission.activate_submissions
+      @queued_submission.reload
+      @queued_submission.queued.should be_true
+    end
+
+    it 'should update activated_at to current if removed from queue' do
+      @queued_submission.activated_at.should be_nil 
+      @queued_submission.queued.should be_true
+      Submission.activate_submissions
+      @queued_submission.reload
+      Submission.not_in_queue.should include(@queued_submission)
+      @queued_submission.activated_at.should_not be_nil
+    end
+    it 'should not update activated_at to current if not removed from queue' do
+      @old_submission.update_attribute(:activated_at,Time.zone.now)
+      Submission.active.should include(@old_submission)
+      Submission.in_queue.should include(@queued_submission)
+      Submission.activate_submissions
+      @queued_submission.reload
+      Submission.in_queue.should include(@queued_submission)
+      @queued_submission.activated_at.should be_nil
+    end
+    it 'should alert previous critiquers if removed from queue' do
+      Alert.destroy_all
+      Submission.in_queue.should include(@queued_submission)
+      Submission.activate_submissions
+      @queued_submission.reload
+      Submission.in_queue.should_not include(@queued_submission)
+      @old_submission.critiques.count.should eql(5)
+      Alert.count.should eql(5)
+    end
+
+    it 'should not alert previous critiquers if not removed from queue' do
+      Alert.destroy_all
+      @old_submission.update_attribute(:activated_at,Time.zone.now)
+      Submission.active.should include(@old_submission)
+      Submission.in_queue.should include(@queued_submission)
+      Submission.activate_submissions
+      @queued_submission.reload
+      Submission.in_queue.should include(@queued_submission)
+      @old_submission.critiques.count.should eql(5)
+      Alert.count.should eql(0)
+    end
   end
+
+  describe 'self.first_queued_for_user(user)' do
+    it 'returns the earliest submission in queue for user' do
+      submission.update_attribute(:queued,true)
+      submission2 = FactoryGirl.create(:submission,user:submission.user,queued:true)
+      Submission.in_queue.should include(submission)
+      Submission.in_queue.should include(submission2)
+      submission.created_at.should be < submission2.created_at
+      Submission.first_queued_for_user(submission.user).should eql(submission) 
+    end
+  end
+
 end
