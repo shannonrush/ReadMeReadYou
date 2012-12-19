@@ -12,6 +12,14 @@
       %span.label
         Chapters: 
       #{@submission.chapter_list}
+  -if has_other_chapters?(@submission)
+    %p
+      %span.label
+        Other Chapters:
+      -other_chapters(@submission).each do |c|
+        =link_to "#{c.name} ",c.submission
+        -unless other_chapters(@submission).last==c
+          ,
   -if has_notes?(@submission)
     %p
       %span.label

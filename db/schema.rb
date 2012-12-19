@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121219181422) do
+ActiveRecord::Schema.define(:version => 20121219194805) do
 
   create_table "alerts", :force => true do |t|
     t.integer  "user_id"
@@ -62,10 +62,10 @@ ActiveRecord::Schema.define(:version => 20121219181422) do
     t.string   "title"
     t.text     "content"
     t.text     "notes"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
+    t.datetime "created_at",                      :null => false
+    t.datetime "updated_at",                      :null => false
     t.string   "genre"
-    t.boolean  "queued"
+    t.boolean  "queued",       :default => false
     t.datetime "activated_at"
   end
 
