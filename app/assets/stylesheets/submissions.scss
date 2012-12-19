@@ -21,8 +21,16 @@ div.submission {
     width:100%;
     overflow:hidden;
     span {
-      width:16%;
       float:left;
+    }
+    span.date,span.genre{
+      width:10%;
+    }
+    span.word_count,span.critique_count {
+      width:15%;
+    }
+    span.title, span.author {
+      width:25%;
     }
   }
 }

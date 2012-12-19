@@ -1,8 +1,8 @@
 %div.submission
   %p
-    %span=date_for_list(submission)
-    %span=link_to submission.title_with_chapters, submission
-    %span=link_to submission.user.full_name.truncate(40), submission.user
-    %span=submission.genre
-    %span=submission.word_count
-    %span=link_to_if(submission.critiques.count > 0, submission.critiques.count, submission_critiques_path(submission))
+    %span.date=date_for_list(submission)
+    %span.title=link_to submission.title_with_chapters, submission
+    %span.author=link_to submission.user.full_name.truncate(40), submission.user
+    %span.genre=submission.genre
+    %span.word_count=submission.word_count
+    %span.critique_count=link_to_if(submission.critiques.count > 0, submission.critiques.count, submission_critiques_path(submission))
