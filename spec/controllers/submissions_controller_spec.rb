@@ -4,11 +4,6 @@ describe SubmissionsController do
   let (:submission) {FactoryGirl.create(:submission)}
   let (:user) {FactoryGirl.create(:user, email:"sub@rmry.com")}
 
-  describe '#activate_submissions' do
-    it 'should remove submission from queue if author has no active submission'
-    it 'should not remove submission from queue if author has active submission'
-  end
-
   describe '#check_logged_in' do
     it 'should redirect to sign in if no current user' do
       post :create
@@ -57,6 +52,19 @@ describe SubmissionsController do
       sign_in(user)
       post :create,submission:{user_id:user.id}
       flash[:notice].should_not eql("Authorization failed, please try again")
+    end
+  end
+
+  describe '#activate_submissions' do
+    it 'removes submission from queue if author has no active submission' do
+      sign_in(user)
+      queued = FactoryGirl.create(:submission,user:submission.user)
+      submission.update_attribute(:activated_at,Time.zone.now-8.days)
+      5.times {FactoryGirl.create(:critique,submission:submission)}
+      User.without_active_submission.should include(submission.user)
+      get :index
+      submission.user.submissions.reload
+      Submission.active.should include(queued)
     end
   end
 

@@ -22,16 +22,37 @@ div#user_elements {
   h2 {
     font-weight:lighter;
   }
-  div.submission, div.critique {
+  div.critique, div.submission {
     width:80%;
     p {
       margin:0;
       width:100%;
       overflow:hidden;
       span {
-        width:20%;
         float:left;
       }
     }
+  }
+  div.critique {
+    span.date {
+      width:20%;
+    }
+    span.critique {
+      width:35%;
+    }
+    span.rating {
+      width:45%;
+    }
   } 
+  div.submission {
+    span.title {
+      width:35%;
+    }
+    span.status,span.date{
+      width:10%;
+    }
+    span.genre,span.word_count,span.critique_count {
+      width:15%;
+    }
+  }
 }

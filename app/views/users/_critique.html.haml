@@ -1,5 +1,5 @@
 %div.critique
   %p
-    %span=date_for_list(critique)
-    %span=link_to critique.submission.title_with_chapters, critique
-    %span=rating_for(critique)
+    %span.date=date_for_list(critique)
+    %span.critique=link_to critique.submission.title_with_chapters, critique
+    %span.rating=rating_for(critique)
