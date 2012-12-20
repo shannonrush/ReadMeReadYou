@@ -54,6 +54,13 @@ describe Comment do
       emails = mails.collect {|m| m['to'].to_s}
       emails.should_not include(comment.user.email)
     end
+
+    it 'should not send an additional email to critiquer if also commenter' do
+      ActionMailer::Base.deliveries.count.should eql(0)
+      comment1 = FactoryGirl.create(:comment,user:@commenter,critique:@critique)
+      comment2 = FactoryGirl.create(:comment,user:@critique.user,critique:@critique)
+      ActionMailer::Base.deliveries.count.should eql(2)
+    end
   end
 
   describe 'after_create :alerts_for_new_comment' do
@@ -71,6 +78,12 @@ describe Comment do
       alerts.count.should eql(1)
       title = critique.submission.title_with_chapters
       alerts.first.message.should eql("Your critique on #{title} has a new comment")
+    end
+
+    it 'should not generate an alert for critiquer if critiquer is commenter' do
+      Alert.for_user(critique.user).count.should eql(0) 
+      new_comment = Comment.create(user:critique.user,critique:critique,content:"New Comment")
+      Alert.for_user(critique.user).count.should eql(0) 
     end
 
     it 'should generate an alert for other commenters with correct message' do

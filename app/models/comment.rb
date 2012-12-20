@@ -11,7 +11,7 @@ class Comment < ActiveRecord::Base
   protected
 
   def emails_for_new_comment
-    email_critiquer
+    email_critiquer unless self.user == self.critique.user
     email_other_commenters
   end
 
@@ -29,7 +29,7 @@ class Comment < ActiveRecord::Base
   def alerts_for_new_comment
     title = self.critique.submission.title_with_chapters
     link = "/critiques/#{self.critique.id}"
-    alert_critiquer(title, link)
+    alert_critiquer(title, link) unless self.user == self.critique.user
     alert_other_commenters(title, link)
   end
 
