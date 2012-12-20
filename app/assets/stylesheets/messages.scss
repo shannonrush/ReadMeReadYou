@@ -30,28 +30,28 @@ div.message {
     margin:0;
     width:100%;
     overflow:hidden;
-    span {
-      float:left;
-    }
-    span.id, span.hidden_message {
-      display:none;
-    }
-    span.delete {
-      width:3%;
-    }
-    span.date {
-      width:17%;
-    }
-    span.from {
-      width:20%;
-    }
-    span.subject {
-      width:60%;
-    }
-    span.bolder_link {
-      a {
-        font-weight:400;
-      }
+  }
+  span {
+    float:left;
+  }
+  span.id, span.hidden_message {
+    display:none;
+  }
+  span.delete {
+    width:3%;
+  }
+  span.date {
+    width:17%;
+  }
+  span.from {
+    width:20%;
+  }
+  span.subject {
+    width:60%;
+  }
+  span.bolder_link {
+    a {
+      font-weight:400;
     }
   }
 }

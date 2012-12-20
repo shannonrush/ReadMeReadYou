@@ -34,20 +34,6 @@ $(document).ready(function() {
 		return false;
 	})
 
-	// on delete click set message deleted true
-	$('.delete').click(function() {
-		var id = $(this).parents('.message_container').find('.id').html();
-		$.ajax({
-			type: "POST",
-			url: "/messages/"+id,
-			data: { _method:'PUT',message:{deleted:true}},
-			dataType: 'html',
-			success: function() {
-			}
-		});
-		return false;
-	})
-
 	// on sent_message_link click toggle sent_messages 
 	$('#sent_messages_link').click(function() {
 		$('#sent_messages').toggle();

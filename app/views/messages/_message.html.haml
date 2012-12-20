@@ -3,7 +3,9 @@
     %p
       %span.hidden_message=message.message
       %span.id=message.id
-      %span.delete=link_to "[X]"
+      =form_for message do |f|
+        =f.hidden_field :deleted, value:true
+        %span.delete=link_to "[X]","#",:onclick => "$('#edit_#{dom_id(message)}').submit()"
       %span.date=date_for_inbox(message)
       %span.from=link_to message.from.full_name, message.from
       %span.subject{:class => subject_link_weight(message)}=link_to message.subject
