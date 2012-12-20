@@ -29,6 +29,28 @@ describe SubmissionsController do
     end
   end
 
+  describe '#check_authorization_for_queued' do
+    it 'redirects to current user if submission in queue and user is not author' do
+      submission.update_attribute(:queued,true) 
+      sign_in(user)
+      get :show,id:submission.id
+      response.should redirect_to(user)
+    end
+
+    it 'does not redirect if submission in queue and user is author' do
+      submission.update_attribute(:queued,true) 
+      sign_in(submission.user)
+      get :show,id:submission.id
+      response.should_not be_redirect
+    end
+
+    it 'does not redirect if submission not in queue' do
+      sign_in(submission.user)
+      get :show,id:submission.id
+      response.should_not be_redirect
+    end
+  end
+
   describe '#check_authorization_for_update' do
     it 'should have authorization failed flash notice if current_user is not submission user' do
       sign_in(user)

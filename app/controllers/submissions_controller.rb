@@ -2,6 +2,7 @@ class SubmissionsController < ApplicationController
 
   before_filter :check_logged_in
   before_filter :check_for_submission, :only => [:show,:update,:edit]
+  before_filter :check_authorization_for_queued, :only => [:show]
   before_filter :check_authorization_for_update, :only => [:edit, :update]
   before_filter :check_authorization_for_create, :only => :create
   before_filter :activate_submissions, :only => :index
@@ -55,6 +56,14 @@ class SubmissionsController < ApplicationController
     @submission = Submission.find(params[:id]) rescue nil
     unless @submission
       redirect_to current_user, :notice => "Submission not found, please try again"
+    end
+  end
+
+  def check_authorization_for_queued
+    if @submission.queued?
+      unless @submission.user == current_user
+        redirect_to current_user, :notice => "Submission not found, please try again"
+      end
     end
   end
 
