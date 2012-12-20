@@ -6,7 +6,11 @@
     %p=f.text_field :title
   %div
     %p.label
-      Chapter(s) - optional
+      Chapter(s) - optional. 
+    %p
+      Enter as a list, like this: 1, 2, 3 or this: Fall, Winter, Summer
+    %p
+      Revise chapters and submit them again - they will be automatically versioned!
     %p=text_field_tag :chapters, @submission.chapter_list
   %div
     %p.label

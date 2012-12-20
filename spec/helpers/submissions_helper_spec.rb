@@ -67,9 +67,8 @@ describe SubmissionsHelper do
 
   describe '#has_chapters?' do
     it 'returns true if submission has chapters' do
-      chapter = FactoryGirl.create(:chapter)
-      submission.chapters << chapter
-      submission.reload
+      chapter = FactoryGirl.create(:chapter,submission:submission)
+      submission.chapters.reload
       helper.has_chapters?(submission).should be_true
     end
     it 'returns false if submission has no chapters' do

@@ -4,7 +4,7 @@ module UsersHelper
   end
 
   def date_for_inbox(message)
-    message.created_at.strftime("%m/%d/%y %l:%M%p")
+    message.created_at.strftime("%m/%d/%y")
   end
 
   def subject_link_weight(message)

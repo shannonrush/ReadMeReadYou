@@ -59,14 +59,14 @@ class Submission < ActiveRecord::Base
   end
 
   def chapter_list
-    self.chapters.collect {|c| c.name}.join(", ")
+    self.chapters.collect {|c| c.name_with_version}.join(", ")
   end
 
   def create_chapters(chapter_list)
     self.chapters.destroy_all
     unless chapter_list.blank?
       names = chapter_list.split(',')
-      names.each {|n| Chapter.create(name:n, submission_id:self.id)}
+      names.each { |n| Chapter.create(name:n, submission_id:self.id)}
     end
   end
 

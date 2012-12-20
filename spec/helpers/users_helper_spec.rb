@@ -15,9 +15,9 @@ describe UsersHelper do
   end
 
   describe '#date_for_inbox(message)' do
-    it 'should return message created at as mm/dd/yy hh:mm am/pm' do
+    it 'should return message created at as mm/dd/yy' do
       message.created_at = "January 15, 1974 at 12:00pm"
-      helper.date_for_inbox(message).should eql("01/15/74 12:00PM")
+      helper.date_for_inbox(message).should eql("01/15/74")
     end
   end
 

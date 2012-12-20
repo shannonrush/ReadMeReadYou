@@ -356,6 +356,12 @@ describe Submission do
       Chapter.create(submission:submission,name:"2")
       submission.chapter_list.should match "1, 2"      
     end
+
+    it 'includes version numbers' do
+      Chapter.create(submission:submission,name:"1")
+      Chapter.create(submission:submission,name:"2",version:2)
+      submission.chapter_list.should eql("1, 2 (v2)")      
+    end
   end
 
   describe '#create_chapters(chapter_list)' do
@@ -365,6 +371,7 @@ describe Submission do
       Chapter.count.should eql(2)
       submission.chapters.count.should eql(2)
     end
+
   end
 
   describe '#word_count' do
