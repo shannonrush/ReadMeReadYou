@@ -25,7 +25,7 @@ class Submission < ActiveRecord::Base
 
   scope :active, needs_time_or_critiques.not_in_queue
 
-  after_create :add_to_queue, :if => :author_has_active_submission?
+  after_create :add_to_queue, :if => :should_be_queued?
   after_create :alert_previous_critiquers, :unless => :queued?
   after_create :add_activated_at, :unless => :queued?
 
@@ -87,6 +87,10 @@ class Submission < ActiveRecord::Base
     prev_subs = self.user.submissions
     prev_critiques = prev_subs.collect {|s| s.critiques}.flatten
     return prev_critiques.collect {|c| c.user}.uniq
+  end
+
+  def should_be_queued?
+    self.author_has_active_submission? || User.has_queued_submissions.include?(self.user)   
   end
   
   def author_has_active_submission?

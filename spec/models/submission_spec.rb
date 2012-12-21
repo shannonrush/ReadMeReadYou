@@ -225,7 +225,6 @@ describe Submission do
       new_submission.activated_at.should be_nil
     end
   end
-
   
   describe '#title_critiquers' do
     before(:each) do
@@ -258,90 +257,64 @@ describe Submission do
     end
   end
 
+  describe '#should_be_queued?' do
+    it 'returns false if author has no previous submissions' do
+      submission.user.submissions.count.should eql(1)
+      submission.should_be_queued?.should be_false
+    end
+    
+    it 'returns false if author has only critiqued submissions' do 
+     submission.update_attribute(:activated_at,Time.zone.now-8.days)
+     5.times {FactoryGirl.create(:critique,submission:submission)}
+     Submission.active.should_not include(submission)
+     submission.should_be_queued?.should be_false
+    end
+
+    it 'returns true if author has an active submission' do
+      Submission.active.should include(submission)
+      new = FactoryGirl.create(:submission,user:submission.user)
+      new.should_be_queued?.should be_true
+    end
+
+    it 'returns true if author has only queued submissions' do
+      submission.update_attributes(queued:true,activated_at:nil)
+      Submission.in_queue.should include(submission)
+      submission.user.submissions.count.should eql(1)
+      new = FactoryGirl.create(:submission,user:submission.user)
+      new.author_has_active_submission?.should be_false
+      new.should_be_queued?.should be_true
+    end
+
+    it 'returns true if author has only queued and critiqued submissions' do
+     new = FactoryGirl.create(:submission,user:submission.user)
+     submission.update_attribute(:activated_at,Time.zone.now-8.days)
+     5.times {FactoryGirl.create(:critique,submission:submission)}
+     Submission.active.should_not include(submission)
+     new.author_has_active_submission?.should be_false
+     new.user.submissions.count.should eql(2)
+     new.should_be_queued?.should be_true
+    end
+    
+  end
+
   describe '#author_has_active_submission?' do
     it 'returns true if user has a submission in Submission.active' do
       new_submission = FactoryGirl.create(:submission,user:submission.user)
+      Submission.active.should include(submission)
       new_submission.author_has_active_submission?.should be_true
     end
     it 'returns false if user does not have a submission in Submission.active' do
       new_submission = FactoryGirl.create(:submission)
       new_submission.author_has_active_submission?.should be_false
     end
-  end
-
-  describe '#self.ordered_by(order_by)' do
-    before (:each) do
-      author1 = FactoryGirl.create(:user,last:"Aush")
-      author2 = FactoryGirl.create(:user,last:"Zush")
-      @submission1 = FactoryGirl.create(:submission,user:author1,content:"one two",created_at:"January 1, 1974",title:"A Title",genre:"Action")
-      @submission2 = FactoryGirl.create(:submission,user:author2,content:"one two three",created_at:"January 15, 1974",title:"Z Title",genre:"Horror")
-    end
-
-    it 'returns active sorted by author last A-Z when author' do
-      Submission.ordered_by("author").should eql([@submission1,@submission2])
-    end
-
-    it 'returns active sorted by word count 0-inf when word_count' do
-      Submission.ordered_by("word_count").should eql([@submission1,@submission2])
-    end
-
-    it 'returns active sorted by critique count 0-inf when critique_count' do
-      FactoryGirl.create(:critique,submission:@submission1)
-      @submission1.critiques.count.should eql(1)
-      @submission2.critiques.count.should eql(0)
-      Submission.ordered_by("critique_count").should eql([@submission1,@submission2])
-    end
-
-    it 'returns active sorted by activated_at with latest first when activated_at' do
-      Submission.ordered_by("activated_at").first.should eql(@submission2)
-    end
-
-    it 'returns active sorted by title A-Z when title' do
-      Submission.ordered_by("title").should eql([@submission1,@submission2])
-    end
-
-    it 'returns active sorted by genre A-Z when genre' do
-      Submission.ordered_by("genre").should eql([@submission1,@submission2])
-    end
-      
-  end
-
-  describe '#title_with_chapters' do
-    it 'returns title and Ch. + chapter names comma delimited' do
-      Chapter.create(submission:submission,name:"1")
-      Chapter.create(submission:submission,name:"2")
-      submission.title_with_chapters.should match "Ch. 1, 2"
-    end
-  end
-
-  describe '#chapter list' do
-    it 'returns comma delimited chapter list' do
-      Chapter.create(submission:submission,name:"1")
-      Chapter.create(submission:submission,name:"2")
-      submission.chapter_list.should match "1, 2"      
-    end
-
-    it 'includes version numbers' do
-      Chapter.create(submission:submission,name:"1")
-      Chapter.create(submission:submission,name:"2",version:2)
-      submission.chapter_list.should eql("1, 2 (v2)")      
-    end
-  end
-
-  describe '#create_chapters(chapter_list)' do
-    it 'takes comma delimited chapter string and creates Chapter for each' do
-      Chapter.count.should eql(0)
-      submission.create_chapters("3, 4")
-      Chapter.count.should eql(2)
-      submission.chapters.count.should eql(2)
-    end
-
-  end
-
-  describe '#word_count' do
-    it 'returns the number of words in content' do
-      submission.update_attribute(:content, "one two three")
-      submission.word_count.should eql(3)
+    it 'returns false if user has only queued submissions' do
+      queued = FactoryGirl.create(:submission,user:submission.user)
+      Submission.in_queue.should include(queued)
+      submission.update_attribute(:activated_at,Time.zone.now-8.days)
+      5.times {FactoryGirl.create(:critique,submission:submission)}
+      Submission.active.should_not include(submission)
+      new = FactoryGirl.create(:submission,user:submission.user)
+      new.author_has_active_submission?.should be_false
     end
   end
 
@@ -430,6 +403,82 @@ describe Submission do
       Submission.in_queue.should include(submission2)
       submission.created_at.should be < submission2.created_at
       Submission.first_queued_for_user(submission.user).should eql(submission) 
+    end
+  end
+
+  describe '#self.ordered_by(order_by)' do
+    before (:each) do
+      author1 = FactoryGirl.create(:user,last:"Aush")
+      author2 = FactoryGirl.create(:user,last:"Zush")
+      @submission1 = FactoryGirl.create(:submission,user:author1,content:"one two",created_at:"January 1, 1974",title:"A Title",genre:"Action")
+      @submission2 = FactoryGirl.create(:submission,user:author2,content:"one two three",created_at:"January 15, 1974",title:"Z Title",genre:"Horror")
+    end
+
+    it 'returns active sorted by author last A-Z when author' do
+      Submission.ordered_by("author").should eql([@submission1,@submission2])
+    end
+
+    it 'returns active sorted by word count 0-inf when word_count' do
+      Submission.ordered_by("word_count").should eql([@submission1,@submission2])
+    end
+
+    it 'returns active sorted by critique count 0-inf when critique_count' do
+      FactoryGirl.create(:critique,submission:@submission1)
+      @submission1.critiques.count.should eql(1)
+      @submission2.critiques.count.should eql(0)
+      Submission.ordered_by("critique_count").should eql([@submission1,@submission2])
+    end
+
+    it 'returns active sorted by activated_at with latest first when activated_at' do
+      Submission.ordered_by("activated_at").first.should eql(@submission2)
+    end
+
+    it 'returns active sorted by title A-Z when title' do
+      Submission.ordered_by("title").should eql([@submission1,@submission2])
+    end
+
+    it 'returns active sorted by genre A-Z when genre' do
+      Submission.ordered_by("genre").should eql([@submission1,@submission2])
+    end
+      
+  end
+
+  describe '#title_with_chapters' do
+    it 'returns title and Ch. + chapter names comma delimited' do
+      Chapter.create(submission:submission,name:"1")
+      Chapter.create(submission:submission,name:"2")
+      submission.title_with_chapters.should match "Ch. 1, 2"
+    end
+  end
+
+  describe '#chapter list' do
+    it 'returns comma delimited chapter list' do
+      Chapter.create(submission:submission,name:"1")
+      Chapter.create(submission:submission,name:"2")
+      submission.chapter_list.should match "1, 2"      
+    end
+
+    it 'includes version numbers' do
+      Chapter.create(submission:submission,name:"1")
+      Chapter.create(submission:submission,name:"2",version:2)
+      submission.chapter_list.should eql("1, 2 (v2)")      
+    end
+  end
+
+  describe '#create_chapters(chapter_list)' do
+    it 'takes comma delimited chapter string and creates Chapter for each' do
+      Chapter.count.should eql(0)
+      submission.create_chapters("3, 4")
+      Chapter.count.should eql(2)
+      submission.chapters.count.should eql(2)
+    end
+
+  end
+
+  describe '#word_count' do
+    it 'returns the number of words in content' do
+      submission.update_attribute(:content, "one two three")
+      submission.word_count.should eql(3)
     end
   end
 
