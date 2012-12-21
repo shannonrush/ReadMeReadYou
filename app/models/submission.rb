@@ -19,19 +19,20 @@ class Submission < ActiveRecord::Base
   
   default_scope order('created_at DESC')
 
-  scope :not_in_queue, where("queued IS NOT TRUE")
+  scope :not_in_queue, where(queued:false)
   scope :in_queue, where(queued:true)
   scope :needs_time_or_critiques, joins("LEFT OUTER JOIN critiques ON critiques.submission_id = submissions.id").group("submissions.id").having("count(critiques.id)<5 OR submissions.activated_at > ?", Time.zone.now-1.week)
-   scope :does_not_need_time, where("submissions.id IS NULL OR submissions.activated_at < ?",Time.zone.now-1.week)
-  scope :does_not_need_critiques, joins("LEFT OUTER JOIN critiques ON critiques.submission_id = submissions.id").group("submissions.id").having("submissions.id IS NULL OR count(critiques.id)>4")
 
   scope :active, needs_time_or_critiques.not_in_queue
-  scope :inactive, does_not_need_time.does_not_need_critiques
 
   after_create :add_to_queue, :if => :author_has_active_submission?
   after_create :alert_previous_critiquers, :unless => :queued?
   after_create :add_activated_at, :unless => :queued?
 
+  def self.inactive
+    Submission.all - Submission.active
+  end
+  
   def self.ordered_by(order_by)
     if order_by == "author"
       return Submission.active.sort {|a,b| a.user.last <=> b.user.last}

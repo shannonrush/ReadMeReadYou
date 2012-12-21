@@ -55,10 +55,6 @@ describe Submission do
       submission.update_attribute(:queued,false)
       Submission.not_in_queue.should include(submission)
     end
-    it 'includes submission where queued is nil' do
-      submission.update_attribute(:queued,nil)
-      Submission.not_in_queue.should include(submission)
-    end
     it 'does not include submission where queued is true' do
       submission.update_attribute(:queued,true)
       Submission.not_in_queue.should_not include(submission)
@@ -68,10 +64,6 @@ describe Submission do
   describe 'scope :in_queue' do
     it 'excludes submission where queued is false' do
       submission.update_attribute(:queued,false)
-      Submission.in_queue.should_not include(submission)
-    end
-    it 'excludes submission where queued is nil' do
-      submission.update_attribute(:queued,nil)
       Submission.in_queue.should_not include(submission)
     end
     it 'includes submission where queued is true' do
@@ -109,28 +101,6 @@ describe Submission do
     end
   end
 
-  describe 'scope :does_not_need_time' do
-    it 'includes submission if created more than a week ago' do
-      submission.update_attribute(:activated_at,8.days.ago)
-      Submission.does_not_need_time.should include(submission)
-    end
-    it 'does not include submission if created less than a week ago' do
-      Submission.does_not_need_time.should_not include(submission)
-    end
-  end
-
-  describe 'scope :does_not_need_critiques' do
-    it 'includes submission if it has greater than 4 critiques' do
-      5.times {FactoryGirl.create(:critique,submission:submission)}
-      submission.critiques.count.should eql(5)
-      Submission.does_not_need_critiques.should include(submission)
-    end
-    it 'does not include submission if it has less than 5 critiques' do
-      submission.critiques.count.should eql(0)
-      Submission.does_not_need_critiques.should_not include(submission)
-    end
-  end
-
   describe 'scope :active' do
     it 'includes submission in needs_time_or_critiques if not in queue' do
       Submission.needs_time_or_critiques.should include(submission)
@@ -160,26 +130,20 @@ describe Submission do
     end
   end
 
-  describe 'scope :inactive' do
+  describe '#self.inactive' do
     it 'includes submission if it does not need time and does not need critique' do
       5.times {FactoryGirl.create(:critique,submission:submission)}
       submission.update_attribute(:activated_at,Time.zone.now - 8.days)
-      Submission.does_not_need_time.should include(submission)
-      Submission.does_not_need_critiques.should include(submission)
       Submission.inactive.should include(submission)
     end
 
     it 'excludes submission if it needs time and does not need critique' do
       5.times {FactoryGirl.create(:critique,submission:submission)}
-      Submission.does_not_need_time.should_not include(submission)
-      Submission.does_not_need_critiques.should include(submission)
       Submission.inactive.should_not include(submission)
     end
     
     it 'excludes submission if it does need time and needs critiques' do
       submission.update_attribute(:activated_at,Time.zone.now - 8.days)
-      Submission.does_not_need_time.should include(submission)
-      Submission.does_not_need_critiques.should_not include(submission)
       Submission.inactive.should_not include(submission)
     end
   end
