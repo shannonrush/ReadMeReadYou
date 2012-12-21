@@ -2,7 +2,72 @@ require 'spec_helper'
 
 describe UsersHelper do
   let (:message) {FactoryGirl.create(:message)}
-  
+
+  describe '#genres_written(user)' do
+    it 'returns genre with no commas if 1 genre submitted' do
+      submission = FactoryGirl.create(:submission,genre:"Fantasy")
+      helper.genres_written(submission.user).should match "Fantasy"
+    end
+
+    it 'returns a comma delimited list of genres submitted if more than 1' do
+      submission = FactoryGirl.create(:submission,genre:"Fantasy")
+      sub2 = FactoryGirl.create(:submission,user:submission.user,genre:"Horror")
+      submission.user.submissions.reload
+      helper.genres_written(submission.user).should match "Fantasy, Horror"
+    end
+
+    it 'returns just one genre if two submissions made with same genre' do
+      submission = FactoryGirl.create(:submission,genre:"Fantasy")
+      sub2 = FactoryGirl.create(:submission,genre:"Fantasy")
+      helper.genres_written(submission.user).should match "Fantasy"
+    end
+
+    it 'returns None Yet if no submissions' do
+      user = FactoryGirl.create(:user)
+      helper.genres_written(user).should match "None Yet"
+    end
+  end
+
+  describe '#average_rating(user)' do
+    it 'returns N/A if user has made no critiques' do
+      user = FactoryGirl.create(:user)
+      helper.average_rating(user).should match "N/A"
+    end
+
+    it 'returns N/A if user has made a critique that has not been rated' do
+      c = FactoryGirl.create(:critique)
+      c.rating.should be_nil
+      helper.average_rating(c.user).should match "N/A"
+    end
+
+    it 'returns critique rating if 1 critique' do
+      c = FactoryGirl.create(:critique,rating:10)
+      helper.average_rating(c.user).should eql(10)
+    end
+
+    it 'returns sum divided by length if more than 1 critique' do
+      c = FactoryGirl.create(:critique,rating:10)
+      c2 = FactoryGirl.create(:critique,user:c.user,rating:0)
+      helper.average_rating(c.user).should eql(5)
+    end
+
+    it 'disregards nil ratings when calculating average' do
+      c = FactoryGirl.create(:critique,rating:10)
+      c2 = FactoryGirl.create(:critique,user:c.user)
+      c2.rating.should be_nil
+      helper.average_rating(c.user).should eql(10)
+    end
+  end
+
+  describe '#number_rated(user)' do
+    it 'returns the count of user critiques where rating is not nil' do
+      c = FactoryGirl.create(:critique,rating:10)
+      c2 = FactoryGirl.create(:critique,user:c.user)
+      c2.rating.should be_nil
+      helper.number_rated(c.user).should eql(1) 
+    end
+  end
+
   describe '#new_message_visibility(message)' do
     it 'should return hidden if message has no errors' do
       helper.new_message_visibility(message).should eql("hidden")

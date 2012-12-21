@@ -1,3 +1,5 @@
+@import "common";
+
 input[type=file].avatar {
   position:relative;
   bottom:10px;
@@ -13,9 +15,20 @@ div.avatar {
 div.profile {
   p.name {
     font-size:2.5em;
+    margin-bottom:0;
   }
   p.bio {
     padding-top:15px;
+  }
+  div#stats {
+    margin-top:15px;
+    p {
+      margin-bottom:5px;
+      margin-top:0;
+    }
+    span.label {
+      color:$light_grey;
+    }
   }
 }
 div#user_elements {

@@ -10,13 +10,18 @@ div#action {
   left:75px;
   top:10px;
 }
-input[type=file].critique {
-  margin-top:15px;
-  margin-bottom:15px;
-  margin-left:50px;
-}
-input[type=image].critique {
-  margin-left:80px;
+form {
+  input[type=file].critique {
+    margin-top:15px;
+    margin-bottom:15px;
+    margin-left:50px;
+  }
+  input[type=image].critique {
+    margin-left:80px;
+  }
+  p.label, label {
+    font-size:1.5em;
+  }
 }
 div.submission {
   width:80%;

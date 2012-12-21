@@ -3,6 +3,7 @@
 %div.profile
   %p.name
     #{@user.first} #{@user.last}
+  =render "stats"
   %p.bio
     #{@user.bio}
 %div.clear

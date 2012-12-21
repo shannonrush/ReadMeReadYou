@@ -1,0 +1,17 @@
+%div#stats
+  %p
+    %span.label
+      Writes In Genres: 
+    #{genres_written(@user)}
+  %p
+    %span.label
+      Critiques Made: 
+    #{@user.critiques.count}
+  %p
+    %span.label
+      Average Critique Rating:
+    #{average_rating(@user)}  
+  %p
+    %span.label
+      Number of Rated Critiques:
+    #{number_rated(@user)} 

@@ -1,4 +1,25 @@
 module UsersHelper
+  def genres_written(user)
+    if user.submissions.any?
+      user.submissions.collect{|s|s.genre}.uniq.join(", ") 
+    else
+      return "None Yet"
+    end
+  end
+
+  def average_rating(user)
+    ratings = user.critiques.collect(&:rating).compact
+    if ratings.any?
+      return ratings.sum/ratings.length
+    else
+      return "N/A"
+    end
+  end
+
+  def number_rated(user)
+    user.critiques.collect(&:rating).compact.count
+  end
+
   def new_message_visibility(message)
     message.errors.any? ? "shown" : "hidden"
   end
