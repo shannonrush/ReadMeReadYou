@@ -34,7 +34,7 @@ describe User do
     end
   end
 
-  describe 'scope :has_queued_submissions' do
+  describe '#self.has_queued_submissions' do
     it 'includes user if any submissions in queue' do
       new_submission = FactoryGirl.create(:submission,user:user,queued:true)
       Submission.in_queue.should include(new_submission)
@@ -47,7 +47,7 @@ describe User do
     end
   end
 
-  describe 'scope :without_active_submission' do
+  describe '#self.without_active_submission' do
     it 'includes user who does not have any submissions' do
       user.submissions.count.should eql(0)
       User.without_active_submission.should include(user)
@@ -74,9 +74,26 @@ describe User do
       Submission.inactive.should_not include(submission)
       User.without_active_submission.should_not include(user)
     end
+
+    it 'excludes user who has submission that needs time and needs critiques' do
+      submission = FactoryGirl.create(:submission)
+      Submission.active.should include(submission)
+      User.without_active_submission.should_not include(user)
+    end
+
+    it 'excludes user who has a critiqued submission, an active submission and a queued submission' do
+      critiqued = FactoryGirl.create(:submission,user:user,created_at:Time.zone.now-8.days) 
+      5.times {FactoryGirl.create(:critique,submission:critiqued)}
+      Submission.inactive.should include(critiqued)
+      active = FactoryGirl.create(:submission,user:critiqued.user)
+      Submission.active.should include(active)
+      queued = FactoryGirl.create(:submission,user:critiqued.user)
+      Submission.in_queue.should include(queued)
+      User.without_active_submission.should_not include(critiqued.user)
+    end
   end
 
-  describe 'scope :needs_submission_activated' do
+  describe '#self.needs_submission_activated' do
     it 'includes user with a submission in queue and an inactive submission' do
       submission1 = FactoryGirl.create(:submission,user:user,created_at:Time.zone.now-8.days)
       5.times {FactoryGirl.create(:critique,submission:submission1)}
