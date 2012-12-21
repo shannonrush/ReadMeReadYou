@@ -36,7 +36,7 @@ module UsersHelper
     if Submission.active.include?(submission)
       return "active"
     elsif Submission.in_queue.include?(submission)
-      index = [Submission.in_queue & submission.user.submissions].flatten.index(submission) + 1
+      index = [Submission.in_queue & submission.user.submissions].flatten.sort_by(&:created_at).index(submission) + 1
       return "Queued ##{index}"
     else
       return "critiqued"

@@ -115,6 +115,7 @@ describe UsersHelper do
       queued = FactoryGirl.create(:submission,user:submission.user)
       queued2 = FactoryGirl.create(:submission,user:submission.user)
       submission.user.submissions.reload
+      queued.created_at.should < queued2.created_at
       helper.submission_status(queued).should match "Queued #1"
       helper.submission_status(queued2).should match "Queued #2"
        

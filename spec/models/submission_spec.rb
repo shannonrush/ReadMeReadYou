@@ -405,8 +405,8 @@ describe Submission do
       earliest_queued.reload
       @queued_submission.reload
       earliest_queued.created_at.should be < @queued_submission.created_at
-      earliest_queued.queued.should be_true
-      @queued_submission.queued.should be_false
+      earliest_queued.queued.should be_false
+      @queued_submission.queued.should be_true
     end
 
     it 'should not set any queued to false if author has active submission' do

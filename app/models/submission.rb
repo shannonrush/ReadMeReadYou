@@ -101,7 +101,7 @@ class Submission < ActiveRecord::Base
   end
 
   def self.first_queued_for_user(user)
-    user.submissions.where(queued:true).first 
+    user.submissions.where(queued:true).sort_by(&:created_at).first 
   end
   
   def alert_previous_critiquers
