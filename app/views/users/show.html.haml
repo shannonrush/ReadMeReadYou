@@ -5,7 +5,7 @@
     #{@user.first} #{@user.last}
   =render "stats"
   %p.bio
-    #{@user.bio}
+    #{simple_format(@user.bio)}
 %div.clear
 -if viewer_is_user?(@user)
   %p=link_to "Edit Profile",edit_user_path(@user)
