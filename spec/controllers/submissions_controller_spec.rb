@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe SubmissionsController do
   let (:submission) {FactoryGirl.create(:submission)}
-  let (:user) {FactoryGirl.create(:user, email:"sub@rmry.com")}
+  let (:user) {FactoryGirl.create(:user)}
 
   describe '#check_logged_in' do
     it 'should redirect to sign in if no current user' do

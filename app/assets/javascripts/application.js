@@ -14,4 +14,9 @@
 //= require jquery_ujs
 //= require jquery.ui.all
 //= require autocomplete-rails
-//= require_tree .
+//= require excanvas.min.js
+//= require jquery.flot.js
+//= require jquery.flot.axislabels.js
+//= require messages.js
+//= require submissions.js
+

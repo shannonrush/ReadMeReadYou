@@ -1,0 +1,17 @@
+-content_for :javascript do
+  :javascript
+    var sentenceData = #{Analyzer.sentence_counts(@submission.processed, @submission.id).to_a.to_json};
+%div#analysis.white_box
+  %h2
+    Analysis
+  %p
+    Word Count: #{word_count(@submission)}
+  %p
+    Sentence Count: #{sentence_count(@submission)}
+  %p
+    Average Words Per Sentence: #{average_sentence_length(@submission)}
+  %div#sentence_chart
+  %p
+    Lexical Density: #{lexical_density(@submission)}
+  %p
+    Gunning fog index: #{gunning_fog(@submission)}

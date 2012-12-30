@@ -2,7 +2,8 @@ class SubmissionsController < ApplicationController
 
   before_filter :check_logged_in
   before_filter :check_for_submission, :only => [:show,:update,:edit]
-  before_filter :check_authorization_for_queued, :only => [:show]
+  before_filter :check_authorization_for_queued, :only => :show
+  before_filter :analyze, :only => :show
   before_filter :check_authorization_for_update, :only => [:edit, :update]
   before_filter :check_authorization_for_create, :only => :create
   before_filter :activate_submissions, :only => :index
@@ -80,4 +81,7 @@ class SubmissionsController < ApplicationController
     end
   end
 
+  def analyze
+    @submission.processed = ContentFixer.process_for_analysis(@submission.content)
+  end
 end

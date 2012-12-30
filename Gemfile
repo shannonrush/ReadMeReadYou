@@ -10,6 +10,10 @@ gem 'exception_notification', :require => 'exception_notifier'
 gem 'haml-rails'
 gem 'sass'
 
+gem 'gemcutter'
+gem 'rwordnet'
+gem 'stemmify'
+
 gem 'devise'
 
 gem 'capistrano'

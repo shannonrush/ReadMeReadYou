@@ -4,6 +4,7 @@
     %title ReadMeReadYou        
     = stylesheet_link_tag :application, :media => "all"
     = javascript_include_tag :application 
+    = yield :javascript
     = csrf_meta_tags
   %body
     %div#logo=link_to image_tag("logo.png"), root_path

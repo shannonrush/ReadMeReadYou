@@ -42,3 +42,21 @@ div.submission {
     }
   }
 }
+div#analysis {
+  width:80%;
+  border: 5px solid black;
+  margin-top: 20px;
+  h2 {
+    margin:0;
+  }
+  p {
+    font-weight:normal;
+    margin-bottom:5px;
+    margin-top:5px;
+  }
+  div#sentence_chart {
+    width:500px;
+    height:300px;
+    margin:20px 0px 20px 40px;
+  }
+}

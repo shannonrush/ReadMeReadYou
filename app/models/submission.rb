@@ -3,6 +3,7 @@ class Submission < ActiveRecord::Base
   has_many :chapters, :dependent => :destroy
   has_many :critiques
 
+  attr_accessor :processed, :word_counts
   attr_accessible :content, :notes, :title, :user_id, :genre, :activated_at, :queued
 
   Submission::GENRES = ["Action","Crime","Fantasy","Historical","Horror","Mystery","Romance","SciFi","Western"]
@@ -37,7 +38,7 @@ class Submission < ActiveRecord::Base
     if order_by == "author"
       return Submission.active.sort {|a,b| a.user.last <=> b.user.last}
     elsif order_by == "word_count"
-      return Submission.active.sort {|a,b| a.word_count <=> b.word_count}
+      return Submission.active.sort {|a,b| a.content.split.size <=> b.content.split.size}
     elsif order_by == "critique_count"
       return Submission.active.sort {|a,b| b.critiques.count <=> a.critiques.count}
     elsif order_by == "title"
@@ -71,9 +72,6 @@ class Submission < ActiveRecord::Base
     end
   end
 
-  def word_count
-    self.content.split.size
-  end
 
   def title_critiquers
     # returns unique list of users previously critiquing title

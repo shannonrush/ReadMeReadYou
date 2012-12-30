@@ -20,4 +20,23 @@ module SubmissionsHelper
     submission.critiques.present?
   end
 
+  def word_count(submission)
+    Analyzer.word_count(submission.processed)
+  end
+
+  def sentence_count(submission)
+    Analyzer.sentence_count(submission.processed)
+  end
+
+  def average_sentence_length(submission)
+    Analyzer.average_sentence_length(submission.processed)
+  end
+
+  def lexical_density(submission)
+    Analyzer.lexical_density(submission.processed)
+  end
+
+  def gunning_fog(submission)
+    Analyzer.gunning_fog(submission.processed)
+  end
 end

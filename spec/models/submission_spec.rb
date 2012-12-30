@@ -29,7 +29,7 @@ describe Submission do
       content = ""
       10001.times {content << "word "}
       submission.update_attribute(:content,content)
-      submission.word_count.should eql(10001)
+      submission.content.split.size.should eql(10001)
       submission.should_not be_valid
     end
     it 'is valid if content is less than 10000 words' do
@@ -37,7 +37,7 @@ describe Submission do
       content = ""
       9999.times {content << "word "}
       submission.update_attribute(:content,content)
-      submission.word_count.should eql(9999)
+      submission.content.split.size.should eql(9999)
       submission.should be_valid
     end
   end
@@ -71,7 +71,6 @@ describe Submission do
       Submission.in_queue.should include(submission)
     end
   end
-
 
   describe 'scope :needs_time_or_critiques' do
     it 'includes submissions less than a week old with less than 5 critiques' do
@@ -475,11 +474,5 @@ describe Submission do
 
   end
 
-  describe '#word_count' do
-    it 'returns the number of words in content' do
-      submission.update_attribute(:content, "one two three")
-      submission.word_count.should eql(3)
-    end
-  end
 
 end
