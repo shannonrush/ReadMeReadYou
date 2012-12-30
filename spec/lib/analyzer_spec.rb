@@ -82,6 +82,23 @@ describe Analyzer do
     end
   end
 
+  describe '#self.total_syllables(text)' do
+    it 'returns total syllables for text' do
+      text = "The rabbit terrified ridiculous cats"
+      Analyzer.total_syllables(text).should eql(11)
+    end
+  end
+
+  describe '#self.syllable_guess(word)' do
+    it 'returns a syllable guess for word' do
+      Analyzer.syllable_guess("a").should eql(1)
+      Analyzer.syllable_guess("the").should eql(1)
+      Analyzer.syllable_guess("rabbit").should eql(2)
+      Analyzer.syllable_guess("terrified").should eql(3)
+      Analyzer.syllable_guess("ridiculous").should eql(4)
+    end
+  end
+
   describe '#self.lexical_density(text)' do
     it 'returns the number of unique words divided by the number of words in text' do
       text = "These words repeat words these"
@@ -89,7 +106,4 @@ describe Analyzer do
     end
   end
 
-  describe '#gunning_fog' do
-    
-  end
 end

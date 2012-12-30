@@ -13,6 +13,28 @@ class Analyzer
     end
     File.open("#{Rails.root}/data/syllables", "wb") {|f| Marshal.dump(syllables, f)}
   end
+
+  def self.syllable_guess(word)
+    word.sub!(/(?:[^laeiouy]es|ed|[^laeiouy]e)$/, '')
+    word.sub!(/^y/, '')
+    total = word.scan(/[aeiouy]{1,2}/).size
+    return total > 0 ? total : 1
+  end
+
+  def self.guesser_tester
+    total_guessed = 0
+    total_correct = 0
+    syllables = Analyzer.syllables
+    syllables.keys.each do |word|
+      total_guessed += 1
+      if Analyzer.syllable_guess(word.clone.downcase) == syllables[word]
+        total_correct += 1
+      else
+        puts word
+      end
+    end
+    puts "PERCENT CORRECT: #{total_correct.to_f/total_guessed.to_f}"
+  end
   
   def self.syllables
     return File.open("#{Rails.root}/data/syllables", "rb") {|f| Marshal.load(f)}
@@ -72,6 +94,20 @@ class Analyzer
     return Hash[sentence_counts.sort]
   end
 
+  def self.total_syllables(text)
+    total = 0
+    syllables = Analyzer.syllables
+    text.split.each do |word|
+      if syllables[word.upcase] > 0
+        total += syllables[word.upcase]
+      else
+        total += Analyzer.syllable_guess(word.clone)
+      end
+    end
+    return total
+  end
+
+
   def self.lexical_density(text)
     word_counts = Analyzer.words_by_count(text)
     return ((word_counts.keys.count.to_f/word_counts.values.sum.to_f) * 100).round
@@ -83,5 +119,17 @@ class Analyzer
     return (0.4*component).round(1)
   end
 
+  def self.flesch_kincaid(text)
+    sentence_component = 1.015 * Analyzer.average_sentence_length(text).to_f
+    average_syllables = Analyzer.total_syllables(text).to_f/Analyzer.word_count(text).to_f
+    syllable_component = 84.6 * average_syllables
+    return (206.835 - sentence_component - syllable_component).round(2)
+  end
 
+  def self.flesch_kincaid_grade(text)
+    sentence_component = 0.39 * average_sentence_length(text).to_f
+    average_syllables = Analyzer.total_syllables(text).to_f/Analyzer.word_count(text).to_f
+    syllable_component = 11.8 * average_syllables
+    return (sentence_component + syllable_component - 15.59).round(1)
+  end
 end

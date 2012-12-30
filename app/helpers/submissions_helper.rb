@@ -39,4 +39,12 @@ module SubmissionsHelper
   def gunning_fog(submission)
     Analyzer.gunning_fog(submission.processed)
   end
+
+  def flesch_kincaid(submission)
+    Analyzer.flesch_kincaid(submission.processed)
+  end
+
+  def flesch_kincaid_grade(submission)
+    Analyzer.flesch_kincaid_grade(submission.processed)
+  end
 end

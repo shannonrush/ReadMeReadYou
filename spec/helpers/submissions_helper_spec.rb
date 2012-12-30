@@ -123,6 +123,4 @@ describe SubmissionsHelper do
     end
   end
 
-  describe '#gunning_fog(submission)' do
-  end
 end
