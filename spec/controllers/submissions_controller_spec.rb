@@ -24,7 +24,7 @@ describe SubmissionsController do
     end
     it 'should not have submission not found flash notice if submission found' do
       sign_in(submission.user)
-      put :update,id:submission.id
+      put :update,id:submission.id,:submission => {:content=>"test"}
       flash[:notice].should_not eql("Submission not found, please try again")
     end
   end
@@ -59,7 +59,7 @@ describe SubmissionsController do
     end
     it 'should not have authorization failed flash notice if current_user is submission user' do
       sign_in(submission.user)
-      put :update,id:submission.id
+      put :update,id:submission.id,submission:{content:"test"}
       flash[:notice].should_not eql("Authorization failed, please try again")
     end
   end
@@ -124,18 +124,18 @@ describe SubmissionsController do
     it 'should update attributes' do
       sign_in(submission.user)
       submission.genre.should eql("Horror")
-      put :update,id:submission.id,submission:{genre:"Fantasy"}
+      put :update,id:submission.id,submission:{genre:"Fantasy",content:"test"}
       submission.reload
       submission.genre.should eql("Fantasy")
     end
     it 'should redirect to submission if valid' do
       sign_in(submission.user)
-      put :update,id:submission.id,submission:{genre:"Fantasy"}
+      put :update,id:submission.id,submission:{genre:"Fantasy",content:"test"}
       response.should redirect_to(submission) 
     end
     it 'should render edit if invalid' do
       sign_in(submission.user)
-      put :update,id:submission.id,submission:{genre:""}
+      put :update,id:submission.id,submission:{genre:"",content:"test"}
       response.should render_template("edit") 
     end
   end

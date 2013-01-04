@@ -7,6 +7,10 @@
   %p
     Word Count: #{word_count(@submission)}
   %p
+    Unique Words: #{unique_word_count(@submission)}
+  %p
+    Ten Most Used Uncommon Words: #{most_used_uncommon(@submission, 10)}
+  %p
     Sentence Count: #{sentence_count(@submission)}
   %p
     Average Words Per Sentence: #{average_sentence_length(@submission)}

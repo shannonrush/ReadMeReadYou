@@ -13,10 +13,17 @@ describe Analyzer do
     end
   end
   
-  describe '#words_by_count(text)' do
+  describe '#self.words_by_count(text)' do
     it 'returns a hash with unique words and counts' do
       text = "These words repeat words these"
       Analyzer.words_by_count(text).should == {"these"=>2,"words"=>2,"repeat"=>1}
+    end
+  end
+
+  describe '#self.most_used_uncommon(text)' do
+    it 'returns an array of word count arrays sorted with highest count first' do
+      text = "There's something wrong, wrong, wrong something"
+      Analyzer.most_used_uncommon(text).should == [["wrong",3],["something",2],["there's",1]]
     end
   end
   
@@ -51,6 +58,13 @@ describe Analyzer do
     it 'returns the number of words in text' do
       text = "one two three"
       Analyzer.word_count(text).should eql(3)
+    end
+  end
+
+  describe '#self.unique_word_count(text)' do
+    it 'returns the number of unique words in text' do
+      text = "one one one two three three"
+      Analyzer.unique_word_count(text).should eql(3)
     end
   end
 

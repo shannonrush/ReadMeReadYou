@@ -15,6 +15,7 @@ class Analyzer
   end
 
   def self.syllable_guess(word)
+    word = word.clone
     word.sub!(/(?:[^laeiouy]es|ed|[^laeiouy]e)$/, '')
     word.sub!(/^y/, '')
     total = word.scan(/[aeiouy]{1,2}/).size
@@ -27,7 +28,7 @@ class Analyzer
     syllables = Analyzer.syllables
     syllables.keys.each do |word|
       total_guessed += 1
-      if Analyzer.syllable_guess(word.clone.downcase) == syllables[word]
+      if Analyzer.syllable_guess(word.downcase) == syllables[word]
         total_correct += 1
       else
         puts word
@@ -41,17 +42,23 @@ class Analyzer
   end
 
   def self.words_by_count(text)
-    scrubbed = ContentFixer.scrub(text)
-    words = scrubbed.split
+    words = text.clone.split
     word_counts = Hash.new(0)
     words.each do |w|
       word_counts[w.downcase]+=1
-  end
+    end
     return word_counts
+  end
+
+  def self.most_used_uncommon(text)
+    scrubbed = ContentFixer.remove_punctuation(text.clone)
+    scrubbed = ContentFixer.remove_common(scrubbed)
+    counts = Analyzer.words_by_count(scrubbed)
+    return counts.sort_by{|k,v| v}.reverse
   end
   
   def self.complex_words_total(text)
-    words = text.split
+    words = text.clone.split
     complex = 0
     syllables = Analyzer.syllables
     words.each do |w|
@@ -68,11 +75,16 @@ class Analyzer
   end
 
   def self.word_count(text)
-    text.split.size
+    text.clone.split.size
+  end
+
+  def self.unique_word_count(text)
+    scrubbed = ContentFixer.remove_punctuation(text.clone)
+    self.words_by_count(scrubbed).keys.count
   end
 
   def self.sentences(text)
-    text.split(/\?\s|!\s|\.\s|\.\.\./)
+    text.clone.split(/\?\s|!\s|\.\s|\.\.\./)
   end
 
   def self.sentence_count(text)
@@ -91,25 +103,26 @@ class Analyzer
       file.puts "SENTENCE: #{s}"
     end
     file.close
-    return Hash[sentence_counts.sort]
+    return sentence_counts
   end
 
   def self.total_syllables(text)
     total = 0
     syllables = Analyzer.syllables
-    text.split.each do |word|
+    text.clone.split.each do |word|
       if syllables[word.upcase] > 0
         total += syllables[word.upcase]
       else
-        total += Analyzer.syllable_guess(word.clone)
+        total += Analyzer.syllable_guess(word)
       end
     end
     return total
   end
 
-
   def self.lexical_density(text)
-    word_counts = Analyzer.words_by_count(text)
+    scrubbed = ContentFixer.remove_quotes(text.clone)
+    scrubbed = ContentFixer.remove_punctuation(scrubbed)
+    word_counts = Analyzer.words_by_count(scrubbed)
     return ((word_counts.keys.count.to_f/word_counts.values.sum.to_f) * 100).round
   end
 

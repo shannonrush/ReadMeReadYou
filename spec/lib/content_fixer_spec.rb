@@ -41,38 +41,41 @@ describe ContentFixer do
       content = "Mr. Man, meet Mrs. Lady and Ms. Girl."
       ContentFixer.process_for_analysis(content).should match "Mr Man, meet Mrs Lady and Ms Girl."
     end
-
-    it 'strips single and double quotes' do
-      content = "\"This is a 'sentence'\""
-      ContentFixer.process_for_analysis(content).should match "This is a sentence"
-    end
   end
 
-  describe '#self.scrub(content)' do
+  describe '#self.remove_quotes(content)' do
     it 'should remove double quotes' do
       content = '"This is quoted"'
-      ContentFixer.scrub(content).should match "This is quoted"
+      ContentFixer.remove_quotes(content).should match "This is quoted"
     end
 
     it 'should remove single quotes' do
       content = "'This is quoted'"
-      ContentFixer.scrub(content).should match "This is quoted"
+      ContentFixer.remove_quotes(content).should match "This is quoted"
     end
+  end
 
+  describe '#self.remove_punctuation' do
     it 'should remove numbers' do
       content = "This has 01234567890 numbers"
-      ContentFixer.scrub(content).should match "This has  numbers"
+      ContentFixer.remove_punctuation(content).should match "This has  numbers"
     end
 
     it 'should remove .,?!*' do
       content = "This. has, some? punctuation!*"
-      ContentFixer.scrub(content).should match "This has some punctuation"
+      ContentFixer.remove_punctuation(content).should match "This has some punctuation"
     end
 
     it 'should replace / with space' do
       content = "This is and/or something"
-      ContentFixer.scrub(content).should match "This is and or something"
+      ContentFixer.remove_punctuation(content).should match "This is and or something"
     end
+  end
 
+  describe '#self.remove_common(content)' do
+    it 'should remove common words' do
+      content = "The spotted owl and the cat"
+      ContentFixer.remove_common(content).should match "spotted owl cat"
+    end
   end
 end

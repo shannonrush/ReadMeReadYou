@@ -1,7 +1,7 @@
 module SubmissionsHelper
  
   def content_for_edit(submission)
-    ContentFixer.quotes_to_symbols(submission.content.clone)
+    ContentFixer.quotes_to_symbols(submission.content)
   end
 
   def has_chapters?(submission)
@@ -27,6 +27,19 @@ module SubmissionsHelper
 
   def word_count(submission)
     Analyzer.word_count(submission.processed)
+  end
+
+  def unique_word_count(submission)
+    Analyzer.unique_word_count(submission.processed)
+  end
+
+  def most_used_uncommon(submission, count)
+    top_used_uncommon = Analyzer.most_used_uncommon(submission.processed)[0..count-1]
+    string = ""
+    top_used_uncommon.each do |array|
+      string << "#{array[0]} (#{array[1]}), "
+    end
+    return string.rstrip.chop
   end
 
   def sentence_count(submission)
