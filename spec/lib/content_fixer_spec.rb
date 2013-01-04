@@ -9,6 +9,27 @@ describe ContentFixer do
     end
   end
 
+  describe '#self.quotes_to_symbols(content)' do
+    it 'should replace &quot; with "' do
+      content = '&quot;something&quot;'
+      ContentFixer.quotes_to_symbols(content).should match '"something"'
+    end
+    it "should replace &#39; with '" do
+      content = "&#39;something&#39;"
+      ContentFixer.quotes_to_symbols(content).should match "'something'"
+    end
+  end
+
+  describe '#self.quotes_to_code(content)' do
+    it 'should replace " with &quot;' do
+      content = '"something"'
+      ContentFixer.quotes_to_code(content).should match '&quot;something&quot;'
+    end
+    it "should replace ' with &#39;" do
+      content = "'something'"
+      ContentFixer.quotes_to_code(content).should match '&#39;something&#39;'
+    end
+  end
 
   describe '#self.process_for_analysis(content)' do
     it 'removes all underscores' do

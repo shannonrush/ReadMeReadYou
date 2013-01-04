@@ -1,7 +1,7 @@
 module SubmissionsHelper
  
   def content_for_edit(submission)
-    ContentFixer.process_for_editing(submission.content.clone)
+    ContentFixer.quotes_to_symbols(submission.content.clone)
   end
 
   def has_chapters?(submission)
