@@ -1,4 +1,9 @@
 module SubmissionsHelper
+ 
+  def content_for_edit(submission)
+    ContentFixer.process_for_editing(submission.content.clone)
+  end
+
   def has_chapters?(submission)
     submission.chapter_list.present?
   end

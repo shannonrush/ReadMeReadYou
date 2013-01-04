@@ -35,6 +35,7 @@ class SubmissionsController < ApplicationController
   end
 
   def update
+    params[:submission][:content] = ContentFixer.process_after_edit(params[:submission][:content])
     if @submission.update_attributes(params[:submission])
       @submission.create_chapters(params[:chapters])
       redirect_to submission_path(@submission), :notice => "Submission updated!"

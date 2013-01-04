@@ -10,6 +10,18 @@ class ContentFixer
     return file_string
   end
 
+  def self.process_for_editing(content)
+    content.gsub!(/&quot;/,'"')
+    content.gsub!(/&#39;/,"'")
+    return content
+  end
+
+  def self.process_after_edit(content)
+    content.gsub!(/"/,'&quot;')
+    content.gsub!(/'/,"&#39;")
+    return content
+  end
+
   def self.process_for_analysis(content)
     abbreviations = ["Mr.","Mrs.","Ms."]
     content.gsub!("_","")
