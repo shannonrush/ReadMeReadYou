@@ -42,7 +42,8 @@ class Analyzer
   end
 
   def self.words_by_count(text)
-    words = text.clone.split
+    text = ContentFixer.remove_punctuation(text)
+    words = text.split
     word_counts = Hash.new(0)
     words.each do |w|
       word_counts[w.downcase]+=1
@@ -51,14 +52,15 @@ class Analyzer
   end
 
   def self.most_used_uncommon(text)
-    scrubbed = ContentFixer.remove_punctuation(text.clone)
+    scrubbed = ContentFixer.remove_punctuation(text)
     scrubbed = ContentFixer.remove_common(scrubbed)
     counts = Analyzer.words_by_count(scrubbed)
     return counts.sort_by{|k,v| v}.reverse
   end
   
   def self.complex_words_total(text)
-    words = text.clone.split
+    text = ContentFixer.remove_punctuation(text)
+    words = text.split
     complex = 0
     syllables = Analyzer.syllables
     words.each do |w|
@@ -75,12 +77,13 @@ class Analyzer
   end
 
   def self.word_count(text)
-    text.clone.split.size
+    text = ContentFixer.remove_punctuation(text)
+    return text.split.size
   end
 
   def self.unique_word_count(text)
-    scrubbed = ContentFixer.remove_punctuation(text.clone)
-    self.words_by_count(scrubbed).keys.count
+    text = ContentFixer.remove_punctuation(text)
+    self.words_by_count(text).keys.count
   end
 
   def self.sentences(text)
@@ -107,9 +110,10 @@ class Analyzer
   end
 
   def self.total_syllables(text)
+    text = ContentFixer.remove_punctuation(text)
     total = 0
     syllables = Analyzer.syllables
-    text.clone.split.each do |word|
+    text.split.each do |word|
       if syllables[word.upcase] > 0
         total += syllables[word.upcase]
       else
@@ -120,7 +124,7 @@ class Analyzer
   end
 
   def self.lexical_density(text)
-    scrubbed = ContentFixer.remove_quotes(text.clone)
+    scrubbed = ContentFixer.remove_quotes(text)
     scrubbed = ContentFixer.remove_punctuation(scrubbed)
     word_counts = Analyzer.words_by_count(scrubbed)
     return ((word_counts.keys.count.to_f/word_counts.values.sum.to_f) * 100).round

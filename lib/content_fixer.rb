@@ -51,7 +51,8 @@ class ContentFixer
   end
 
   def self.remove_common(content)
-    words = content.clone.split
+    content = ContentFixer.remove_punctuation(content.clone)
+    words = content.split
     words.delete_if {|w| COMMON.include?(w.downcase)}
     return words.join(" ")
   end
