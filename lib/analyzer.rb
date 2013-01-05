@@ -149,4 +149,20 @@ class Analyzer
     syllable_component = 11.8 * average_syllables
     return (sentence_component + syllable_component - 15.59).round(1)
   end
+
+  def self.repeated_word_groups(text, group_by)
+    text = ContentFixer.remove_punctuation(text.clone.downcase)
+    word_array = text.split
+    i = 0
+    repeats = Hash.new(0)
+    while i <= word_array.count - group_by 
+      current_group = word_array[i..i+(group_by-1)].join(" ")
+      unless repeats.keys.include?(current_group)
+        repeats[current_group] = text.scan(current_group).count
+      end
+      i+=1
+    end
+    repeats = repeats.delete_if{|k,v| v<3}
+    return repeats.sort_by{|k,v|v}.reverse
+  end
 end

@@ -42,6 +42,15 @@ module SubmissionsHelper
     return string.rstrip.chop
   end
 
+  def repeated_word_groups(submission, group_by)
+    repeated = Analyzer.repeated_word_groups(submission.processed,group_by)
+    string = ""
+    repeated.each do |array|
+      string << "#{array[0]} (#{array[1]}), "
+    end
+    return string.rstrip.chop
+  end
+
   def sentence_count(submission)
     Analyzer.sentence_count(submission.processed)
   end

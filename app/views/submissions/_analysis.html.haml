@@ -9,7 +9,13 @@
   %p
     Unique Words: #{unique_word_count(@submission)}
   %p
-    Ten Most Used Uncommon Words: #{most_used_uncommon(@submission, 10)}
+    Ten Most Used Uncommon Words: 
+  %p
+    #{most_used_uncommon(@submission, 10)}
+  %p
+    Groups Of 3 Words Used More Than Twice:
+  %p
+    #{repeated_word_groups(@submission, 3)}
   %p
     Sentence Count: #{sentence_count(@submission)}
   %p

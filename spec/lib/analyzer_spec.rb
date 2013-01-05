@@ -120,4 +120,11 @@ describe Analyzer do
     end
   end
 
+  describe '#self.repeated_word_groups(text, count)' do
+    it 'returns an array of arrays with word groups and value is repeating of all groups repeated more than twice' do
+      text = "She said loudly, something she said loudly something else, something she said loudly"
+      Analyzer.repeated_word_groups(text, 3).should == [["she said loudly",3]]
+    end
+  end
+
 end
