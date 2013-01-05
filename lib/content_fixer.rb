@@ -43,6 +43,14 @@ class ContentFixer
     return content
   end
 
+  def self.remove_double_quotes(content)
+    content = content.clone
+    content.gsub!(/"/,"")
+    content.gsub!(/&quot;/,"")
+    content.gsub!(/dd&#39;/,"")
+    return content
+  end
+
   def self.remove_punctuation(content) 
     content = content.clone
     content.gsub!(/[0-9\?\.!,*\(\)\[\]:\;\-]/,"")

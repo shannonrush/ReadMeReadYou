@@ -55,6 +55,13 @@ describe ContentFixer do
     end
   end
 
+  describe '#self.remove_double_quotes(content)' do
+    it 'should remove double quotes' do
+      content = '"This is quoted"'
+      ContentFixer.remove_quotes(content).should match "This is quoted"
+    end
+  end
+
   describe '#self.remove_punctuation' do
     it 'should remove numbers' do
       content = "This has 01234567890 numbers"

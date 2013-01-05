@@ -42,6 +42,7 @@ class Analyzer
   end
 
   def self.words_by_count(text)
+    text = ContentFixer.remove_double_quotes(text)
     text = ContentFixer.remove_punctuation(text)
     words = text.split
     word_counts = Hash.new(0)
@@ -54,11 +55,13 @@ class Analyzer
   def self.most_used_uncommon(text)
     scrubbed = ContentFixer.remove_punctuation(text)
     scrubbed = ContentFixer.remove_common(scrubbed)
+    scrubbed = ContentFixer.remove_double_quotes(scrubbed)
     counts = Analyzer.words_by_count(scrubbed)
     return counts.sort_by{|k,v| v}.reverse
   end
   
   def self.complex_words_total(text)
+    text = ContentFixer.remove_quotes(text)
     text = ContentFixer.remove_punctuation(text)
     words = text.split
     complex = 0
@@ -83,6 +86,7 @@ class Analyzer
 
   def self.unique_word_count(text)
     text = ContentFixer.remove_punctuation(text)
+    text = ContentFixer.remove_double_quotes(text)
     self.words_by_count(text).keys.count
   end
 
@@ -110,6 +114,7 @@ class Analyzer
   end
 
   def self.total_syllables(text)
+    text = ContentFixer.remove_quotes(text)
     text = ContentFixer.remove_punctuation(text)
     total = 0
     syllables = Analyzer.syllables
@@ -152,6 +157,7 @@ class Analyzer
 
   def self.repeated_word_groups(text, group_by)
     text = ContentFixer.remove_punctuation(text.clone.downcase)
+    text = ContentFixer.remove_double_quotes(text)
     word_array = text.split
     i = 0
     repeats = Hash.new(0)
