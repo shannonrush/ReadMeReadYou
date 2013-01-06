@@ -9,12 +9,12 @@
   %p
     Unique Words: #{unique_word_count(@submission)}
   %p
-    Ten Most Used Uncommon Words: 
-  %p
+    Ten Most Used Words (Most Common Words Excluded): 
+  %p.nested
     #{most_used_uncommon(@submission, 10)}
   %p
     Groups Of 3 Words Used More Than Twice:
-  %p
+  %p.nested
     #{repeated_word_groups(@submission, 3)}
   %p
     Sentence Count: #{sentence_count(@submission)}
@@ -22,10 +22,14 @@
     Average Words Per Sentence: #{average_sentence_length(@submission)}
   %div#sentence_chart
   %p
-    Lexical Density: #{lexical_density(@submission)}
+    =link_to "Lexical Density","http://en.wikipedia.org/wiki/Lexical_density"
+    =": #{lexical_density(@submission)}"
   %p
-    Gunning Fog Index: #{gunning_fog(@submission)}
+    =link_to "Gunning Fog Index","http://en.wikipedia.org/wiki/Gunning_fog_index"
+    =": #{gunning_fog(@submission)}"
   %p
-    Flesch-Kincaid Readability: #{flesch_kincaid(@submission)}
+    =link_to "Flesch Reading Ease","http://en.wikipedia.org/wiki/Flesch%E2%80%93Kincaid_readability_test#Flesch_Reading_Ease"
+    =": #{flesch_kincaid(@submission)}"
   %p
-    Flesch-Kincaid Grade Level: #{flesch_kincaid_grade(@submission)}
+    =link_to "Flesch-Kincaid Grade Level","http://en.wikipedia.org/wiki/Flesch%E2%80%93Kincaid_readability_test#Flesch.E2.80.93Kincaid_Grade_Level"
+    =": #{flesch_kincaid_grade(@submission)}"

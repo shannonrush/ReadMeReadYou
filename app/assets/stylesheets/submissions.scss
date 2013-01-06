@@ -51,12 +51,19 @@ div#analysis {
   }
   p {
     font-weight:normal;
-    margin-bottom:5px;
+    margin-bottom:10px;
     margin-top:5px;
+  }
+  p.nested {
+    margin-left:20px;
+    margin-bottom:15px;
   }
   div#sentence_chart {
     width:500px;
     height:300px;
     margin:20px 0px 20px 40px;
+  }
+  a {
+    color: $dark_blue;
   }
 }
