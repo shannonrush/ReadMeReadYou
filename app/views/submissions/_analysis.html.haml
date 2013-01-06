@@ -19,6 +19,8 @@
   %p
     Sentence Count: #{sentence_count(@submission)}
   %p
+    #{percentage_sentences_started_with(@submission)}
+  %p
     Average Words Per Sentence: #{average_sentence_length(@submission)}
   %div#sentence_chart
   %p

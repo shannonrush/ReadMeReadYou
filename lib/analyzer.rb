@@ -102,6 +102,19 @@ class Analyzer
     return Analyzer.word_count(text)/Analyzer.sentence_count(text)
   end
 
+  def self.percentage_sentences_started_with(text)
+    text = ContentFixer.remove_double_quotes(text)
+    sentence_starts = Hash.new(0)
+    sentences = Analyzer.sentences(text)
+    sentences.each do |s|
+      sentence_starts[s.split.first]+=1
+    end
+    puts sentence_starts
+    sentence_starts = sentence_starts.sort_by{|k,v|v}.reverse
+    highest = sentence_starts.first[1]
+    return sentence_starts.collect{|array|[array[0],((array[1].to_f/sentences.count.to_f)*100).round] if array[1]==highest}.compact
+  end
+
   def self.sentence_counts(text, id=0)
     file = File.open("#{Rails.root}/log/#{id}_sentences","w")
     sentence_counts = Hash.new(0)

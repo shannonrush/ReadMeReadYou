@@ -127,4 +127,12 @@ describe Analyzer do
     end
   end
 
+  describe '#self.percentage_sentences_started_with(text)' do
+    it 'finds the word or words that most begin sentences and returns array of arrays with word and percentage' do
+      text = "She said once. The cat ran. She wondered? The rat can. Four little kittens."
+      Analyzer.percentage_sentences_started_with(text).should == [["She",40],["The",40]]
+    end
+
+  end
+
 end

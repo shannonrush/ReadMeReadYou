@@ -51,6 +51,11 @@ module SubmissionsHelper
     Analyzer.average_sentence_length(submission.processed)
   end
 
+  def percentage_sentences_started_with(submission)
+    most_started = Analyzer.percentage_sentences_started_with(submission.processed)
+    return most_started.collect{|array|"#{array[1]}% of sentences start with the word '#{array[0]}'"}.join("\n")
+  end
+
   def lexical_density(submission)
     Analyzer.lexical_density(submission.processed)
   end
