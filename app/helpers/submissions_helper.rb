@@ -35,20 +35,12 @@ module SubmissionsHelper
 
   def most_used_uncommon(submission, count)
     top_used_uncommon = Analyzer.most_used_uncommon(submission.processed)[0..count-1]
-    string = ""
-    top_used_uncommon.each do |array|
-      string << "#{array[0]} (#{array[1]}), "
-    end
-    return string.rstrip.chop
+    return top_used_uncommon.collect {|array| "#{array[0]} (#{array[1]})"}.join(", ")
   end
 
   def repeated_word_groups(submission, group_by)
     repeated = Analyzer.repeated_word_groups(submission.processed,group_by)
-    string = ""
-    repeated.each do |array|
-      string << "#{array[0]} (#{array[1]}), "
-    end
-    return string.rstrip.chop
+    return repeated.collect {|array| "#{array[0]} (#{array[1]})"}.join(", ")
   end
 
   def sentence_count(submission)
