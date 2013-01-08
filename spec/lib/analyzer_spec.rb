@@ -70,14 +70,14 @@ describe Analyzer do
 
   describe '#self.sentences(text)' do
     it 'returns array of text split on periods, question marks, ellipses or exclamation points' do
-      text  = "This is one sentence? This is another sentence! This is a third sentence. This is a fourth...This is a fifth"
-      Analyzer.sentences(text).should eql(["This is one sentence","This is another sentence","This is a third sentence","This is a fourth","This is a fifth"])
+      text  = "This is one sentence? This is another sentence! This is a third sentence. This is a fourth...This is a fifth."
+      Analyzer.sentences(text).should eql(["This is one sentence?","This is another sentence!","This is a third sentence.","This is a fourth...","This is a fifth."])
     end
   end
 
   describe '#self.sentence_count(text)' do
     it 'returns the number of sentences in text' do
-      text = "This is one sentence? This is another sentence! This is a third sentence. This is a fourth...This is a fifth"
+      text = "This is one sentence? This is another sentence! This is a third sentence. This is a fourth...This is a fifth."
       Analyzer.sentence_count(text).should eql(5)
     end
   end
@@ -86,6 +86,13 @@ describe Analyzer do
     it 'returns the sum of sentence counts divided by number of sentences' do
       text = "This has four words. This sentence has five words. This is a sentence with six."
       Analyzer.average_sentence_length(text).should eql(5)
+    end
+  end
+
+  describe "#self.sentences_close_with_same_start_word(text)" do
+    it 'returns hash with keys of start words and values of array of groups of sentences that contain at least 2 same start words in every 3 sentences in group' do
+      text = "She ran away. He sat there. She thanked him. Four little kittens. He wondered. Five dogs. He said. Six chickens. Wondered aloud. Clouds skated. He wondered again. Her skirt. He thought. He wondered for a third time."
+      Analyzer.sentences_close_with_same_start_word(text).should == {"She"=>["She ran away. He sat there. She thanked him."],"He"=>["He wondered. Five dogs. He said.","He wondered again. Her skirt. He thought. He wondered for a third time."]}
     end
   end
 

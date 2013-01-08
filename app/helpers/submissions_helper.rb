@@ -51,6 +51,11 @@ module SubmissionsHelper
     Analyzer.average_sentence_length(submission.processed)
   end
 
+  def sentences_close_with_same_start_word(submission)
+    sentence_groups = Analyzer.sentences_close_with_same_start_word(submission.processed)
+    return sentence_groups.values.join("\n\n")
+  end
+
   def percentage_sentences_started_with(submission)
     most_started = Analyzer.percentage_sentences_started_with(submission.processed)
     return most_started.collect{|array|"#{array[1]}% of sentences start with the word '#{array[0]}'"}.join("\n")

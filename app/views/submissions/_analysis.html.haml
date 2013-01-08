@@ -24,6 +24,9 @@
     Average Words Per Sentence: #{average_sentence_length(@submission)}
   %div#sentence_chart
   %p
+    These sentences start similarly and are close together:
+  %p.nested=simple_format(sentences_close_with_same_start_word(@submission))
+  %p
     =link_to "Lexical Density","http://en.wikipedia.org/wiki/Lexical_density"
     =": #{lexical_density(@submission)}"
   %p

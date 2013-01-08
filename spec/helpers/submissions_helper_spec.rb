@@ -95,32 +95,5 @@ describe SubmissionsHelper do
     end
   end
 
-  describe '#word_count(submission)' do
-    it 'returns the word count of processed' do
-      submission.processed = "one two three"
-      helper.word_count(submission).should eql(3)
-    end
-  end
-
-  describe '#sentence_count(submission)' do
-    it 'returns the sentence count of processed' do
-      submission.processed = "This is one sentence? This is another sentence! This is a third sentence. This is a fourth...This is a fifth"
-      helper.sentence_count(submission).should eql(5)
-    end
-  end
-
-  describe '#average_sentence_length(submission)' do
-    it 'returns the average sentence length of processed' do
-      submission.processed = "This has four words. This sentence has five words. This is a sentence with six."
-      helper.average_sentence_length(submission).should eql(5)
-    end
-  end
-
-  describe '#lexical_density(submission)' do
-    it 'returns the number of unique words divided by the number of words in processed' do
-      submission.processed = "These words repeat words these"
-      helper.lexical_density(submission).should eql(60)
-    end
-  end
 
 end

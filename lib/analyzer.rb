@@ -91,15 +91,45 @@ class Analyzer
   end
 
   def self.sentences(text)
-    text.clone.split(/\?\s|!\s|\.\s|\.\.\./)
+    text.scan(/(\S.*?(\.{3}|!|\.|\?))/).collect{|arr|arr.first}
   end
 
   def self.sentence_count(text)
-    Analyzer.sentences(text).size   
+    Analyzer.sentences(text).count
   end
 
   def self.average_sentence_length(text)
     return Analyzer.word_count(text)/Analyzer.sentence_count(text)
+  end
+
+  def self.sentences_close_with_same_start_word(text)
+    text = ContentFixer.remove_double_quotes(text)
+    sentence_groups = Hash.new
+    sentences = self.sentences(text)
+    start_words = sentences.collect{|s|s.split.first}.uniq
+    start_words.each do |word|
+      sentence_groups[word] = []
+      i = 0
+      while i && i<= sentences.count-3
+        # find next sentence index with start word
+        i = sentences.index{|s|sentences.index(s) >= i && s.split.first==word}
+        if i 
+          # adds sentences while chain is unbroken
+          current_array = [sentences[i]]
+          while sentences[i+1] && Analyzer.any_sentence_starts_with_word?([sentences[i+1],sentences[i+2]].compact,word)
+            current_array<<[sentences[i+1],sentences[i+2]].compact.flatten
+            i+=2
+          end
+          sentence_groups[word] << current_array.join(" ") if current_array.count > 1
+          i+=1
+        end
+      end
+    end
+    return sentence_groups.delete_if{|k,v|v.empty?}
+  end
+
+  def self.any_sentence_starts_with_word?(sentence_array, word)
+    sentence_array.collect{|s|s.split.first}.include?(word)
   end
 
   def self.percentage_sentences_started_with(text)
@@ -109,7 +139,6 @@ class Analyzer
     sentences.each do |s|
       sentence_starts[s.split.first]+=1
     end
-    puts sentence_starts
     sentence_starts = sentence_starts.sort_by{|k,v|v}.reverse
     highest = sentence_starts.first[1]
     return sentence_starts.collect{|array|[array[0],((array[1].to_f/sentences.count.to_f)*100).round] if array[1]==highest}.compact
