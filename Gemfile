@@ -13,6 +13,7 @@ gem 'sass'
 gem 'gemcutter'
 gem 'rwordnet'
 gem 'stemmify'
+gem 'engtagger', '0.1.2'
 
 gem 'devise'
 

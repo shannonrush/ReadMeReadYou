@@ -12,7 +12,94 @@ describe Analyzer do
       Analyzer.syllables["FOREST"].should eql(2)
     end
   end
-  
+
+  describe '#self.tag_words(text)' do
+    it 'returns an array of arrays, each with word from text in position 0 and pos in position 1' do
+      text = "We saw the big yellow dog."
+      Analyzer.tag_words(text).should == [["We","PRP"],["saw","VBD"],["the","DET"],["big","JJ"],["yellow","NN"],["dog","NN"],[".","PP"]]
+    end
+  end
+
+
+  describe '#self.chunk_sentence(sentence)' do
+    it 'returns an array of arrays with position 0 chunk symbol and remaining content words' do 
+      sentence = "The big yellow dog went home."
+      Analyzer.chunk_sentence(sentence).should == [["NP","Thebig yellow dog"],["VP","went"],["NP","home"]]
+      sentence = "My dog also likes eating sausages."
+      Analyzer.chunk_sentence(sentence).should == [["NP", "My dog"],["ADVP", "also"]]
+    end
+  end
+
+  describe '#self.ignore_tag?(tag)' do
+    it 'returns true for tag beginning with PP' do
+      Analyzer.ignore_tag?('PP').should be_true
+      Analyzer.ignore_tag?('PPR').should be_true
+    end
+    it 'returns true for LRB' do
+      Analyzer.ignore_tag?('LRB').should be_true
+    end
+    it 'returns true for RRB' do
+      Analyzer.ignore_tag?('RRB').should be_true
+    end
+    it 'returns true for SYM' do
+      Analyzer.ignore_tag?('SYM').should be_true
+    end
+    it 'returns true for FW' do
+      Analyzer.ignore_tag?('FW').should be_true
+    end
+    it 'returns true for LS' do
+      Analyzer.ignore_tag?('LS').should be_true
+    end
+  end
+
+  describe '#self.tag_is_determiner?(tag)' do
+    it 'returns true if tag is DET' do
+      Analyzer.tag_is_determiner?('DET').should be_true
+    end
+    it 'returns true if tag is PDT' do
+      Analyzer.tag_is_determiner?('PDT').should be_true
+    end
+    it 'returns true if tag is PRP' do
+      Analyzer.tag_is_determiner?('PRP').should be_true
+    end
+    it 'returns true if tag is PRPS' do
+      Analyzer.tag_is_determiner?('PRPS').should be_true
+    end
+    it 'returns true if tag is WDT' do
+      Analyzer.tag_is_determiner?('WDT').should be_true
+    end
+    it 'returns true if tag is WPS' do
+      Analyzer.tag_is_determiner?('WPS').should be_true
+    end
+  end
+ 
+  describe '#self.tag_is_adjective?(tag)' do
+    it 'returns true if tag begins with JJ' do
+      Analyzer.tag_is_adjective?('JJ').should be_true
+      Analyzer.tag_is_adjective?('JJR').should be_true
+    end
+  end
+
+  describe '#self.tag_is_preposition?(tag)' do
+    it 'returns true if tag is IN' do
+      Analyzer.tag_is_preposition?('IN').should be_true
+    end
+    it 'returns true if tag is TO' do
+      Analyzer.tag_is_preposition?('TO').should be_true
+    end
+  end
+
+  describe '#self.tag_is_noun?(tag)' do
+    it 'returns true if tag begins with N' do
+      Analyzer.tag_is_noun?('N').should be_true
+      Analyzer.tag_is_noun?('NNP').should be_true
+    end
+    it 'returns true if tag is EX' do
+      Analyzer.tag_is_noun?('EX').should be_true
+    end
+  end
+
+
   describe '#self.words_by_count(text)' do
     it 'returns a hash with unique words and counts' do
       text = "These words repeat words these"

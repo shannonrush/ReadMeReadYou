@@ -1,9 +1,100 @@
 class Analyzer
-  
+  require 'engtagger'
+
   def self.dictionary
     return IO.readlines("#{Rails.root}/data/cmudict")
   end
+  
+  def self.syllables
+    return File.open("#{Rails.root}/data/syllables", "rb") {|f| Marshal.load(f)}
+  end
 
+  def self.tag_words(text)
+    tgr = EngTagger.new
+    tagged_string = tgr.get_readable(text.clone)
+    tagged = []
+    tagged_string.split.each do |pair|
+      parts = pair.split("/")
+      tagged << [parts[0],parts[1]]
+    end
+    return tagged
+  end
+
+  def self.chunk_sentence(sentence)
+    tagged_words = Analyzer.tag_words(sentence)
+    chunked = []
+    last_i = tagged_words.count-1
+    i=0
+    while i <= last_i
+      tagged = tagged_words[i]  
+      tag = tagged[0]
+      chunk = []
+      if Analyzer.ignore_tag?(tag)
+        i+=1
+        next
+      else
+        if Analyzer.tag_is_determiner?(tag)
+          chunk << "NP"
+          i,phrase_words = Analyzer.extract_noun_phrase
+          chunk.concat(phrase_words)
+          
+          
+
+        end
+      end
+    end
+  end
+
+  def Analyzer.extract_noun_phrase(tagged_words, i)
+    phrase_words = []
+    tagged = tagged_words[i] rescue nil
+    if tagged && Analyzer.tag_is_determiner?(tagged[0])
+      phrase_words << tagged[1]
+      i+=1
+      tagged = tagged_words[i] rescue nil
+    end
+    while tagged && Analyzer.tag_is_adjective?(tagged[0]) 
+      phrase_words << tagged[1]
+      i+=1
+      tagged = tagged_words[i] rescue nil
+    end
+    if tagged && Analyzer.tag_is_noun?(tagged[0])
+      phrase_words << tagged[1]
+      i+=1
+      tagged = tagged_words[i] rescue nil
+    else
+      return i, phrase_words
+    end
+    while tagged && Analyzer.tag_is_preposition?(tag)
+      phrase_words << tagged[1]
+      i,np_words = Analyzer.extract_noun_phrase(tagged_words,i)
+      phrase_words.concat(np_words)
+      tagged = tagged_words[i] rescue nil
+    end
+    
+    return i, phrase_words
+  end
+
+  def self.ignore_tag?(tag)
+    tag.start_with?('PP') || ['LRB','RRB','SYM','FW','LS'].include?(tag)
+  end
+
+  def self.tag_is_determiner?(tag)
+    tag=='DET'
+  end
+
+  def self.tag_is_adjective?(tag)
+    tag.start_with?('JJ')
+  end
+
+  def self.tag_is_preposition?(tag)
+    tag=='IN' || tag=='TO'
+  end
+
+  def self.tag_is_noun?(tag)
+    tag.start_with?('N') || tag=='EX'
+  end
+  
   def self.create_syllable_hash_data
     syllables = Hash.new(0)
     self.dictionary.each do |line|
@@ -37,9 +128,6 @@ class Analyzer
     puts "PERCENT CORRECT: #{total_correct.to_f/total_guessed.to_f}"
   end
   
-  def self.syllables
-    return File.open("#{Rails.root}/data/syllables", "rb") {|f| Marshal.load(f)}
-  end
 
   def self.words_by_count(text)
     text = ContentFixer.remove_double_quotes(text)
