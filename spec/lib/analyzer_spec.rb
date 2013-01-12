@@ -13,19 +13,38 @@ describe Analyzer do
     end
   end
 
-  describe '#self.tag_words(text)' do
+  describe '#self.tag_words(text,remove_ignored=false)' do
     it 'returns an array of arrays, each with word from text in position 0 and pos in position 1' do
-      text = "We saw the big yellow dog."
-      Analyzer.tag_words(text).should == [["We","PRP"],["saw","VBD"],["the","DET"],["big","JJ"],["yellow","NN"],["dog","NN"],[".","PP"]]
+      text = "We saw the big, yellow dog."
+      Analyzer.tag_words(text).should == [["We","PRP"],["saw","VBD"],["the","DET"],["big","JJ"],[",","PPC"],["yellow","JJ"],["dog","NN"],[".","PP"]]
+    end
+    it 'does not return ignored tags if remove_ignored is true' do
+      text = "We saw the big, yellow dog."
+      Analyzer.tag_words(text,true).should == [["We","PRP"],["saw","VBD"],["the","DET"],["big","JJ"],["yellow","JJ"],["dog","NN"]]
     end
   end
 
   describe '#self.chunk_sentence(sentence)' do
     it 'returns an array of arrays with position 0 chunk symbol and remaining content words' do 
-      sentence = "The big yellow dog went home."
-      Analyzer.chunk_sentence(sentence).should == [["NP","Thebig yellow dog"],["VP","went"],["NP","home"]]
+      sentence = "The big, yellow dog went home."
+      Analyzer.chunk_sentence(sentence,true).should == [["NP","The big yellow dog"],["VP","went"],["NP","home"]]
       sentence = "My dog also likes eating sausages."
       Analyzer.chunk_sentence(sentence).should == [["NP", "My dog"],["ADVP", "also"]]
+    end
+  end
+
+  describe '#self.extract_noun_phrase(tagged_words, i)' do
+    it 'returns the noun phrase beginning at i, returns the next position i and the phrase as an array of words' do
+      sentence = "The big, yellow dog went home."
+      tagged_words = Analyzer.tag_words(sentence,true)
+      Analyzer.extract_noun_phrase(tagged_words,0).should == [4,"The","big","yellow","dog"]
+    end
+  end
+
+  describe '#self.extract_ad_phrase(tagged_words, i)' do
+    it 'returns the adverb or adjective phrase beginning at i, returns the next position i and the phrase as an array of words' do
+      tagged_words = Analyzer.tag_words("The big, yellow dog went home.",true)
+      Analyzer.extract_ad_phrase(tagged_words,1).should == [1,"big"]
     end
   end
 

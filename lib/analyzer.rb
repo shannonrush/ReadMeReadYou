@@ -9,84 +9,80 @@ class Analyzer
     return File.open("#{Rails.root}/data/syllables", "rb") {|f| Marshal.load(f)}
   end
 
-  def self.tag_words(text)
+  def self.tag_words(text,remove_ignored=false)
     tgr = EngTagger.new
     tagged_string = tgr.get_readable(text.clone)
     tagged = []
     tagged_string.split.each do |pair|
       parts = pair.split("/")
-      tagged << [parts[0],parts[1]]
+      unless remove_ignored && Analyzer.ignore_tag?(parts[1])
+        tagged << [parts[0],parts[1]]
+      end
     end
     return tagged
   end
 
   def self.chunk_sentence(sentence)
-    tagged_words = Analyzer.tag_words(sentence)
+    tagged_words = Analyzer.tag_words(sentence,true)
     chunked = []
     last_i = tagged_words.count-1
     i=0
     while i <= last_i
       tagged = tagged_words[i]  
-      tag = tagged[0]
+      tag = tagged[1]
       chunk = []
-      if Analyzer.ignore_tag?(tag)
-        i+=1
-        next
-      else
-        if Analyzer.tag_is_determiner?(tag)
-          chunk << "NP"
-          i,phrase_words = Analyzer.extract_noun_phrase
-          chunk.concat(phrase_words)
-          
-          
-
-        end
+      if Analyzer.tag_is_determiner?(tag)
+        chunk << "NP"
+        i,noun_words = Analyzer.extract_noun_phrase
+        chunk.concat(noun_words)
+        chunked << chunk
       end
     end
+    return chunked
   end
 
-  def Analyzer.extract_noun_phrase(tagged_words, i)
+  def self.extract_noun_phrase(tagged_words, i)
     # extract (D) (AdjP+) N (PP+) (CP)
-    phrase_words = []
+    noun_words = []
     tagged = tagged_words[i] rescue nil
-    if tagged && Analyzer.tag_is_determiner?(tagged[0])
-      phrase_words << tagged[1]
+    if tagged && Analyzer.tag_is_determiner?(tagged[1])
+      noun_words << tagged[0]
       i+=1
       tagged = tagged_words[i] rescue nil
     end
-    while tagged && Analyzer.tag_is_adjective?(tag) || Analyzer.tag_is_adverb?(tag)
+    while tagged && Analyzer.tag_is_adjective?(tagged[1]) || Analyzer.tag_is_adverb?(tagged[1])
       i, ad_words = Analyzer.extract_ad_phrase(tagged_words, i)
-      phrase_words.concat(ad_words)
+      noun_words.concat(ad_words)
       tagged = tagged_words[i] rescue nil
     end
-    if tagged && Analyzer.tag_is_noun?(tagged[0])
-      phrase_words << tagged[1]
+    if tagged && Analyzer.tag_is_noun?(tagged[1])
+      noun_words << tagged[0]
       i+=1
       tagged = tagged_words[i] rescue nil
     else
-      return i, phrase_words
+      return i, noun_words
     end
-    while tagged && Analyzer.tag_is_preposition?(tag)
-      phrase_words << tagged[1]
+    while tagged && Analyzer.tag_is_preposition?(tagged[1])
+      noun_words << tagged[0]
       i,np_words = Analyzer.extract_noun_phrase(tagged_words,i)
-      phrase_words.concat(np_words)
+      noun_words.concat(np_words)
       tagged = tagged_words[i] rescue nil
     end
-    
-    return i, phrase_words
+   
+    return i, noun_words
   end
 
   def self.extract_ad_phrase(tagged_words, i)
     # extract (Adv+){Adv/Adj}
     ad_words = []
     tagged = tagged_words[i] rescue nil
-    while tagged && Analyzer.tag_is_adverb?(tagged[0])
-      ad_words << tagged[1]
+    while tagged && Analyzer.tag_is_adverb?(tagged[1])
+      ad_words << tagged[0]
       i+=1
       tagged = tagged_words[i] rescue nil
     end
-    if tagged && Analyzer.tag_is_adjective?(tagged[0])
-      ad_words << tagged[1]
+    if tagged && Analyzer.tag_is_adjective?(tagged[1])
+      ad_words << tagged[0]
       i+=1
     end
     return i, ad_words
