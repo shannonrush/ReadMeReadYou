@@ -20,7 +20,6 @@ describe Analyzer do
     end
   end
 
-
   describe '#self.chunk_sentence(sentence)' do
     it 'returns an array of arrays with position 0 chunk symbol and remaining content words' do 
       sentence = "The big yellow dog went home."
@@ -77,6 +76,16 @@ describe Analyzer do
     it 'returns true if tag begins with JJ' do
       Analyzer.tag_is_adjective?('JJ').should be_true
       Analyzer.tag_is_adjective?('JJR').should be_true
+    end
+  end
+
+  describe '#self.tag_is_adverb?(tag)' do
+    it 'returns true if tag begins with R' do
+      Analyzer.tag_is_adverb?('R').should be_true
+      Analyzer.tag_is_adverb?('RBR').should be_true
+    end
+    it 'returns true if tag is WRB' do
+      Analyzer.tag_is_adverb?('WRB').should be_true
     end
   end
 

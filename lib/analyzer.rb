@@ -46,6 +46,7 @@ class Analyzer
   end
 
   def Analyzer.extract_noun_phrase(tagged_words, i)
+    # extract (D) (AdjP+) N (PP+) (CP)
     phrase_words = []
     tagged = tagged_words[i] rescue nil
     if tagged && Analyzer.tag_is_determiner?(tagged[0])
@@ -53,9 +54,9 @@ class Analyzer
       i+=1
       tagged = tagged_words[i] rescue nil
     end
-    while tagged && Analyzer.tag_is_adjective?(tagged[0]) 
-      phrase_words << tagged[1]
-      i+=1
+    while tagged && Analyzer.tag_is_adjective?(tag) || Analyzer.tag_is_adverb?(tag)
+      i, ad_words = Analyzer.extract_ad_phrase(tagged_words, i)
+      phrase_words.concat(ad_words)
       tagged = tagged_words[i] rescue nil
     end
     if tagged && Analyzer.tag_is_noun?(tagged[0])
@@ -75,6 +76,22 @@ class Analyzer
     return i, phrase_words
   end
 
+  def self.extract_ad_phrase(tagged_words, i)
+    # extract (Adv+){Adv/Adj}
+    ad_words = []
+    tagged = tagged_words[i] rescue nil
+    while tagged && Analyzer.tag_is_adverb?(tagged[0])
+      ad_words << tagged[1]
+      i+=1
+      tagged = tagged_words[i] rescue nil
+    end
+    if tagged && Analyzer.tag_is_adjective?(tagged[0])
+      ad_words << tagged[1]
+      i+=1
+    end
+    return i, ad_words
+  end
+
   def self.ignore_tag?(tag)
     tag.start_with?('PP') || ['LRB','RRB','SYM','FW','LS'].include?(tag)
   end
@@ -86,6 +103,11 @@ class Analyzer
   def self.tag_is_adjective?(tag)
     tag.start_with?('JJ')
   end
+
+  def self.tag_is_adverb?(tag)
+    tag.start_with?('R') || tag=='WRB'
+  end
+
 
   def self.tag_is_preposition?(tag)
     tag=='IN' || tag=='TO'
