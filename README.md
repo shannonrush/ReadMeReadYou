@@ -1,4 +1,5 @@
 Ruby on Rails app for writers to share and critique manuscripts
+
 Manuscript analysis including:
 - Lexical Density
 - Gunning Fog Index
