@@ -22,7 +22,7 @@ class Submission < ActiveRecord::Base
 
   scope :not_in_queue, where(queued:false)
   scope :in_queue, where(queued:true)
-  scope :needs_time_or_critiques, joins("LEFT OUTER JOIN critiques ON critiques.submission_id = submissions.id").group("submissions.id").having("count(critiques.id)<5 OR submissions.activated_at > ?", Time.zone.now-1.week)
+  scope :needs_time_or_critiques, joins("LEFT OUTER JOIN critiques ON critiques.submission_id = submissions.id").group("submissions.id").having("count(critiques.id)<1 OR submissions.activated_at > ?", Time.zone.now-1.week)
 
   scope :active, needs_time_or_critiques.not_in_queue
 

@@ -73,29 +73,29 @@ describe Submission do
   end
 
   describe 'scope :needs_time_or_critiques' do
-    it 'includes submissions less than a week old with less than 5 critiques' do
+    it 'includes submissions less than a week old with less than 1 critique' do
       submission.update_attribute(:activated_at,Time.zone.now)
       submission.critiques.count.should eql(0)
       Submission.needs_time_or_critiques.should include(submission)
     end
 
-    it 'includes submissions less than a week old with greater than 4 critiques' do
+    it 'includes submissions less than a week old with greater than 0 critiques' do
       submission.update_attribute(:activated_at,Time.zone.now)
-      5.times {FactoryGirl.create(:critique,submission:submission)}
-      submission.critiques.count.should eql(5)
+      FactoryGirl.create(:critique,submission:submission)
+      submission.critiques.count.should eql(1)
       Submission.needs_time_or_critiques.should include(submission)
     end
     
-    it 'includes submissions greater than a week old with less than 5 critiques' do
+    it 'includes submissions greater than a week old with less than 1 critique' do
       submission.update_attribute(:activated_at,Time.zone.now - 8.days)
       submission.critiques.count.should eql(0)
       Submission.needs_time_or_critiques.should include(submission)
     end
 
-    it 'does not include submissions greater than a week oldwith more than 5 critiques' do
+    it 'does not include submissions greater than a week oldwith more than 0 critiques' do
       submission.update_attribute(:activated_at,Time.zone.now - 8.days)
-      5.times {FactoryGirl.create(:critique,submission:submission)}
-      submission.critiques.count.should eql(5)
+      FactoryGirl.create(:critique,submission:submission)
+      submission.critiques.count.should eql(1)
       Submission.needs_time_or_critiques.should_not include(submission)
     end
   end
@@ -114,7 +114,7 @@ describe Submission do
     end
     it 'excludes submission not in needs_time_or_critiques if in queue' do
       submission.update_attribute(:activated_at,Time.zone.now - 8.days)
-      5.times {FactoryGirl.create(:critique,submission:submission)}
+      FactoryGirl.create(:critique,submission:submission)
       Submission.needs_time_or_critiques.should_not include(submission)
       submission.update_attribute(:queued,true)
       Submission.not_in_queue.should_not include(submission)
@@ -122,7 +122,7 @@ describe Submission do
     end
     it 'excludes submission not in needs_time_or_critiques if not in queue' do
       submission.update_attribute(:activated_at,Time.zone.now - 8.days)
-      5.times {FactoryGirl.create(:critique,submission:submission)}
+      FactoryGirl.create(:critique,submission:submission)
       Submission.needs_time_or_critiques.should_not include(submission)
       Submission.not_in_queue.should include(submission)
       Submission.active.should_not include(submission)
@@ -131,13 +131,13 @@ describe Submission do
 
   describe '#self.inactive' do
     it 'includes submission if it does not need time and does not need critique' do
-      5.times {FactoryGirl.create(:critique,submission:submission)}
+      FactoryGirl.create(:critique,submission:submission)
       submission.update_attribute(:activated_at,Time.zone.now - 8.days)
       Submission.inactive.should include(submission)
     end
 
     it 'excludes submission if it needs time and does not need critique' do
-      5.times {FactoryGirl.create(:critique,submission:submission)}
+      FactoryGirl.create(:critique,submission:submission)
       Submission.inactive.should_not include(submission)
     end
     
@@ -409,8 +409,8 @@ describe Submission do
     before (:each) do
       author1 = FactoryGirl.create(:user,last:"Aush")
       author2 = FactoryGirl.create(:user,last:"Zush")
-      @submission1 = FactoryGirl.create(:submission,user:author1,content:"one two",created_at:"January 1, 1974",title:"A Title",genre:"Action")
-      @submission2 = FactoryGirl.create(:submission,user:author2,content:"one two three",created_at:"January 15, 1974",title:"Z Title",genre:"Horror")
+      @submission1 = FactoryGirl.create(:submission,user:author1,content:"one two",created_at:Time.zone.now-2.days,title:"A Title",genre:"Action")
+      @submission2 = FactoryGirl.create(:submission,user:author2,content:"one two three",created_at:Time.zone.now-1.day,title:"Z Title",genre:"Horror")
     end
 
     it 'returns active sorted by author last A-Z when author' do
