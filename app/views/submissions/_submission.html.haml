@@ -1,6 +1,6 @@
 %div.submission
   %p
-    %span.date=date_for_list(submission)
+    %span.date=activation_date(submission)
     %span.title=link_to submission.title_with_chapters, submission
     %span.author=link_to submission.user.full_name.truncate(40), submission.user
     %span.genre=submission.genre

@@ -128,4 +128,24 @@ describe UsersHelper do
       helper.submission_status(submission).should match "critiqued"
     end
   end
+
+  describe '#submission_date(submission)' do
+    let(:submission) {FactoryGirl.create(:submission)}
+    it 'returns submission created_at in format MM/DD/YY if in queue' do
+      submission2 = FactoryGirl.create(:submission,user:submission.user,created_at:"January 15,1974")
+      Submission.in_queue.should include(submission2)
+      helper.submission_date(submission2).should match "01/15/74"
+    end
+    it 'returns submission activated_at in format MM/DD/YY if active' do
+      submission.activated_at = "May 1,1980"
+      Submission.active.should include(submission)
+      helper.submission_date(submission).should match "05/01/80"
+    end
+    it 'returns submission activated_at in format MM/DD/YY if critiqued' do
+      submission3 = FactoryGirl.create(:submission,created_at:"January 15,2013")
+      FactoryGirl.create(:critique,submission:submission3)
+      Submission.inactive.should include(submission3)
+      helper.submission_date(submission3).should match "01/15/13"
+    end
+  end
 end

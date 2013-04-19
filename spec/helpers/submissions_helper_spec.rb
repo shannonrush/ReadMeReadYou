@@ -4,6 +4,12 @@ describe SubmissionsHelper do
   let (:submission) {FactoryGirl.create(:submission)}
   let (:crit_user) {FactoryGirl.create(:user, email:"crit@rmry.com")}
   
+  describe '#activation_date(submission)' do
+    it 'returns the submission activation date as MM/DD/YY' do
+      submission.activated_at = "January 15, 1974 at 12:00pm"
+      helper.activation_date(submission).should eql("01/15/74")
+    end
+  end
   describe '#has_other_chapters?(submission)' do
     before(:each) do
       Chapter.create(submission:submission,name:"1")

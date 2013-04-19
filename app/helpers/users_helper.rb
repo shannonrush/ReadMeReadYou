@@ -42,4 +42,12 @@ module UsersHelper
       return "critiqued"
     end
   end
+
+  def submission_date(submission)
+    if Submission.in_queue.include?(submission)
+      submission.created_at.strftime("%D")
+    else
+      submission.activated_at.strftime("%D")
+    end
+  end
 end

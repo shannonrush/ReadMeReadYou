@@ -1,7 +1,7 @@
 %div.submission
   %p
     %span.status=submission_status(submission)
-    %span.date=date_for_list(submission)
+    %span.date=submission_date(submission)
     %span.title=link_to submission.title_with_chapters, submission
     %span.genre=submission.genre
     %span.word_count=submission.content.split.size

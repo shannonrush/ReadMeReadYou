@@ -1,5 +1,9 @@
 module SubmissionsHelper
  
+  def activation_date(submission)
+    submission.activated_at.strftime("%D")
+  end
+
   def content_for_edit(submission)
     ContentFixer.quotes_to_symbols(submission.content)
   end
@@ -59,6 +63,11 @@ module SubmissionsHelper
   def percentage_sentences_started_with(submission)
     most_started = Analyzer.percentage_sentences_started_with(submission.processed)
     return most_started.collect{|array|"#{array[1]}% of sentences start with the word '#{array[0]}'"}.join("\n")
+  end
+
+  def percentage_sentence_structure(submission)
+    structures = Analyzer.percentage_sentence_structure(submission.processed)
+    return structures.collect{|array|"#{array[1]}% of sentences have the structure #{array[0]}"}.join("\n")
   end
 
   def lexical_density(submission)
